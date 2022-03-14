@@ -122,9 +122,9 @@ public class GameView extends JPanel {
 		g.setColor(Color.green);
 		PaddleState paddle = breakoutState.getPaddle();
 		// TODO: figure out top-left and bottom right Point of paddle
-		//DONE-check with code
-		Point tl = paddle.getpaddleTL();
-		Point br = paddle.getpaddleBR();
+		//check it
+		Point tl = paddle.getPosition().minus(paddle.getSize());
+		Point br = paddle.getPosition().plus(paddle.getSize());
 		paintPaddle(g, tl, br);
 	}
 
@@ -139,9 +139,9 @@ public class GameView extends JPanel {
 		g.setColor(Color.red);
 		for (BallState ball : breakoutState.getBalls()) {
 			// TODO: figure out top-left and bottom right Point of surrounding rectangle of ball
-			//DONE-check with code
-			Point tl = ball.getballTL();
-			Point br = ball.getballBR(); 
+			//check it
+			Point tl =ball.getCenter().minus(ball.getSize());
+			Point br =ball.getCenter().plus(ball.getSize()); 
 			paintBall(g, tl, br);
 		}
 	}
@@ -163,9 +163,10 @@ public class GameView extends JPanel {
 		g.setColor(Color.blue);
 		for (BlockState block : breakoutState.getBlocks()) {
 			// TODO: figure out top-left and bottom right Point of block
-			//DONE-check with code
-			Point tl = block.getblocksTL();
-			Point br = block.getblocksTL();
+			//DONE
+			//check it
+			Point tl = block.getBlockTL();
+			Point br = block.getBlockBR();
 			paintBlock(g, tl, br);
 		}
 	}

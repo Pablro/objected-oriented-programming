@@ -1,56 +1,63 @@
 package breakout;
 
 // TODO: implement, document
+//Some DONE
+//miss to implement tick and move left-move right
 public class BreakoutState {
-
-	private PaddleState paddle;
-	private BallState[] balls;
-	private Point bottomRight;
-	private BlockState[] blocks;
+	BallState[] balls1;
+	BlockState[] blocks1;
+	Point bottomRight1;
+	PaddleState paddle1;
+	
 	
 	public BreakoutState(BallState[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
-		this.paddle=paddle;
-		this.balls=balls;
-		this.bottomRight=bottomRight;
-		this.blocks=blocks;
-		
+		this.paddle1=paddle;
+		this.balls1=balls;
+		this.bottomRight1=bottomRight;
+		this.blocks1=blocks;
 		
 	}
+	
 	public BallState[] getBalls() {
-		return balls;
+		return balls1;
 	}
 
 	public BlockState[] getBlocks() {
-		return blocks;
+		return blocks1;
 	}
 
 	public PaddleState getPaddle() {
-		return paddle;
+		return paddle1;
 	}
 
 	public Point getBottomRight() {
-		return bottomRight;
+		return bottomRight1;
 	}
 
 	public void tick(int paddleDir) {
-		//TODO implement
+		
 	}
 
 	public void movePaddleRight() {
-		//TODO implement
 	}
 
 	public void movePaddleLeft() {
-		//TODO implement
 	}
 	
 	public boolean isWon() {
-		//TODO implement
-		return false;
+		boolean value=false;
+		if (blocks1==null) {
+			value=true;
+		}
+		
+		return value;
 	}
 
 	public boolean isDead() {
-		//TODO implement
-		return false;
+		boolean value=false;
+		if (balls1==null) {
+			value=true;
+		}
+		return value;
 	}
 }

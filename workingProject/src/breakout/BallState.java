@@ -2,23 +2,26 @@ package breakout;
 
 public class BallState {
 	// TODO: implement
-	BallState(Point position,int diameter,Vector speed){};
+	//DONE-check it
+	private Point center1;
+	private int diameter1;
+	private Vector velocity1;
+	BallState (Point center,int diameter,Vector velocity){
+		this.center1=center;
+		this.diameter1=diameter;
+		this.velocity1=velocity;
+		
+	};
 	
 	public Point getCenter() {
-		//TODO implement
-		return null;
+		return center1;
 	}
 	
 	public Vector getVelocity() {
-		//TODO implement
-		return null;
+		return velocity1;
 	}
-	public Point getballBR() {
-		//TODO implement
-		return null;
-	};
-	public Point getballTL() {
-		//TODO implement
-		return null;
+	public Vector getSize() {
+		Vector size1= new Vector(this.diameter1/2,this.diameter1/2);
+		return size1;
 	};
 }

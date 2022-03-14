@@ -1,14 +1,18 @@
 package breakout;
+
 public class PaddleState {
 	// TODO: implement
-	PaddleState (Point position){};
-	public Point getpaddleBR() {
-		//TODO implement
-		return null;
+	//DONE-check it
+	private Point position1;
+	private Vector size1;
+	PaddleState (Point position, Vector size){
+		this.position1=position;
+		this.size1=size;
 	};
-	public Point getpaddleTL() {
-		//TODO implement
-		return null;
+	public Point  getPosition() {
+		return position1;
 	};
-	
+	public Vector getSize() {
+		return size1;
+	}
 }
