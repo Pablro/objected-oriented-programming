@@ -1,0 +1,8 @@
+-I have include some extra methods
+-Now I have completed the motion of the paddle
+and it is limit by the boundaries (probably missing to increase its speed per unit time)
+I do not get this part
+-I have implemented the basic motion of the ball related to its initial speed (tick method)
+-I do not understand the variable "curlPaddleDir"
+-Missing to implement the physics of the ball and the effects such as block dissapearing, etc.
+-The Won and dead methods should work after implementing the complete version of the tick method.
