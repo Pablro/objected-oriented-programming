@@ -1,0 +1,7 @@
+I have completed most of the classes.
+-Now The Game Map and the GameView should work perfectly find and they ill display the graphics
+-I Have define some basic concepts of the nuclear classes such as BlockState,BallState,PaddleState and Breakoutstate
+in order to make the GameMap and GameView work.
+As on Toledo I have created methods to register position, and velocity and size
+-size is important to conserve in order to predict tl-top-left,tr-top-right,bl-botton-left,br-bottom-right
+-I am have not implement the motion of the paddle neither the tick method
