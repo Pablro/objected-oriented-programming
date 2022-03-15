@@ -15,4 +15,7 @@ public class PaddleState {
 	public Vector getSize() {
 		return size1;
 	}
+	public void setPosition(Point position) {
+		this.position1=position;
+	};
 }

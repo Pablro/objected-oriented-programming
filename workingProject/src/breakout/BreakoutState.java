@@ -2,7 +2,9 @@ package breakout;
 
 // TODO: implement, document
 //Some DONE
-//miss to implement tick and move left-move right
+//miss to implement tick
+// I have establish the ball motion
+//miss the bounce and other tick checks
 public class BreakoutState {
 	BallState[] balls1;
 	BlockState[] blocks1;
@@ -35,13 +37,31 @@ public class BreakoutState {
 	}
 
 	public void tick(int paddleDir) {
+		for (BallState ball:balls1) {
+			 Point position1=ball.getCenter().plus(ball.getVelocity());
+			 ball.setPosition(position1);
+
+
+
+		};
+		
 		
 	}
 
 	public void movePaddleRight() {
+		//tr stands for TOP-Right
+		Point value=this.paddle1.getPosition().plus(new Vector(40,0));
+		Point tr= this.paddle1.getPosition().plus(this.paddle1.getSize());
+		if(tr.getX()<=50000) {
+			this.paddle1.setPosition(value);}
 	}
 
 	public void movePaddleLeft() {
+		// tl stands for TOP-Left
+		Point value=this.paddle1.getPosition().minus(new Vector(40,0));
+		Point tl= this.paddle1.getPosition().minus(this.paddle1.getSize());
+		if(tl.getX()>=0) {
+			this.paddle1.setPosition(value);}
 	}
 	
 	public boolean isWon() {

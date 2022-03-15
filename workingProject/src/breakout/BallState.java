@@ -24,4 +24,10 @@ public class BallState {
 		Vector size1= new Vector(this.diameter1/2,this.diameter1/2);
 		return size1;
 	};
+	public void setPosition(Point position) {
+		this.center1=position;
+	};
+	public void setVelocity(Vector velocity) {
+		this.velocity1=velocity;
+	}
 }
