@@ -3,19 +3,19 @@ package breakout;
 public class PaddleState {
 	// TODO: implement
 	//DONE-check it
-	private Point position1;
-	private Vector size1;
+	private Point position;
+	private Vector size;
 	public PaddleState (Point position, Vector size){
-		this.position1=position;
-		this.size1=size;
+		this.position=position;
+		this.size=size;
 	};
 	public Point  getPosition() {
-		return position1;
+		return position;
 	};
 	public Vector getSize() {
-		return size1;
+		return size;
 	}
 	public void setPosition(Point position) {
-		this.position1=position;
+		this.position=position;
 	};
 }

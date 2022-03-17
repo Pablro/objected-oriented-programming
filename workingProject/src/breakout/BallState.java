@@ -3,31 +3,31 @@ package breakout;
 public class BallState {
 	// TODO: implement
 	//DONE-check it
-	private Point center1;
-	private int diameter1;
-	private Vector velocity1;
+	private Point center;
+	private int diameter;
+	private Vector velocity;
 	public BallState (Point center,int diameter,Vector velocity){
-		this.center1=center;
-		this.diameter1=diameter;
-		this.velocity1=velocity;
+		this.center=center;
+		this.diameter=diameter;
+		this.velocity=velocity;
 		
 	};
 	
 	public Point getCenter() {
-		return center1;
+		return center;
 	}
 	
 	public Vector getVelocity() {
-		return velocity1;
+		return velocity;
 	}
 	public Vector getSize() {
-		Vector size1= new Vector(this.diameter1/2,this.diameter1/2);
+		Vector size1= new Vector(this.diameter/2,this.diameter/2);
 		return size1;
 	};
 	public void setPosition(Point position) {
-		this.center1=position;
+		this.center=position;
 	};
 	public void setVelocity(Vector velocity) {
-		this.velocity1=velocity;
+		this.velocity=velocity;
 	}
 }
