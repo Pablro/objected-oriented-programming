@@ -6,12 +6,13 @@ package breakout;
 // I have establish the ball motion
 //miss the bounce and other tick checks
 public class BreakoutState {
-	BallState[] balls1;
-	BlockState[] blocks1;
-	Point bottomRight1;
-	PaddleState paddle1;
+	private BallState[] balls1;
+	private BlockState[] blocks1;
+	private Point bottomRight1;
+	private PaddleState paddle1;
 	
 	
+	//Need defensive programming 
 	public BreakoutState(BallState[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
 		this.paddle1=paddle;
 		this.balls1=balls;
