@@ -12,27 +12,27 @@ public class GameMap {
 	private static int BLOCK_COLUMNS = 10;
 	private static final Vector INIT_BALL_VELOCITY = new Vector(5,7);
 
-	private static BlockState createBlock(Point bottomLeft) {
+	private static BlockState createBlock(Point topLeft) {
 		Vector marginBL = new Vector(20,20);
 		Vector size = new Vector(WIDTH/BLOCK_COLUMNS-70,HEIGHT/BLOCK_LINES-70);
-		Point blockTL = bottomLeft.plus(marginBL);
+		Point blockTL = topLeft.plus(marginBL);
 		Point blockBR = blockTL.plus(size);
 		// TODO: return a block with given top left (`blockTL`) and bottom right (`blockBR`) Point 
 		//DONE-check it
 		return new BlockState(blockTL,blockBR,size);
 	}
-	private static PaddleState createPaddle(Point bottomLeft) {
+	private static PaddleState createPaddle(Point topLeft) {
 		Vector size = new Vector(WIDTH/BLOCK_COLUMNS/2,HEIGHT/BLOCK_LINES/2);
-		Point center = bottomLeft.plus(size);
+		Point center = topLeft.plus(size);
 		// TODO: return a paddle with given center 
 		//DONE-check it
 		return new PaddleState(center,size);
 	}
-	private static BallState createBall(Point bottomLeft) {
+	private static BallState createBall(Point topLeft) {
 		Vector centerD = new Vector(WIDTH/BLOCK_COLUMNS/2,HEIGHT/BLOCK_LINES/2);
-		Point center = bottomLeft.plus(centerD);
+		Point center = topLeft.plus(centerD);
 		int diameter = INIT_BALL_DIAMETER;
-		// TODO: return a ball with given `center`, `diameter` and initial speed `initSpeed` 
+		// TODO: return a ball with given `center`, `diameter` and initial velocity `INIT_BALL_VELOCITY` 
 		//DONE-check it
 		return new BallState(center,diameter,INIT_BALL_VELOCITY);
 	}
@@ -68,10 +68,10 @@ public class GameMap {
 			}
 			topLeft = topLeft.plus(unitVecDown);
 		}
-		Point topRight = new Point(WIDTH, HEIGHT);
+		Point bottomRight = new Point(WIDTH, HEIGHT);
 		
 		return new BreakoutState(Arrays.stream(balls).filter(x -> x != null).toArray(BallState[]::new),
 								 Arrays.stream(blocks).filter(x -> x != null).toArray(BlockState[]::new),
-								 topRight, paddle);
+								 bottomRight, paddle);
 	}
 }
