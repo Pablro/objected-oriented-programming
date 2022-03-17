@@ -6,7 +6,7 @@ public class BallState {
 	private Point center1;
 	private int diameter1;
 	private Vector velocity1;
-	BallState (Point center,int diameter,Vector velocity){
+	public BallState (Point center,int diameter,Vector velocity){
 		this.center1=center;
 		this.diameter1=diameter;
 		this.velocity1=velocity;
