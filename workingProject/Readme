@@ -1,2 +1,11 @@
 1. Add several access modifiers
 2. Delete the '1' after the class variables
+3. Correct the code mentioned in Errata
+	* Variable `topRight` in the method `GameMap.createStateFromDescription(String description)` should be called `bottomRight`, as it refers to the bottom right point of the field.
+  		The size of the pitch can be derived from this variable's value, since the top left point of the field is the origin (i.e. coordinates (0,0)).
+
+	* A comment in the method `GameMap.createBall(Point bottomLeft)` mentions "initial speed `initSpeed`".
+  		That comment should instead refer to "initial velocity `INIT_BALL_VELOCITY`".
+  		Note that we should have used the term velocity because this vector defines both the initial direction and the initial speed of the ball.
+
+	* The arguments called `bottomLeft` in the methods `GameMap.createBall`, `GameMap.createBlock` and `GameMap.createPaddle` should all be called `topLeft`.

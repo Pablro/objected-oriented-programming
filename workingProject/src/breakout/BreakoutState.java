@@ -39,11 +39,16 @@ public class BreakoutState {
 
 	public void tick(int paddleDir) {
 		for (BallState ball:balls) {
-			 Point position1=ball.getCenter().plus(ball.getVelocity());
-			 ball.setPosition(position1);
-
-
-
+			 Point positionBall=ball.getCenter().plus(ball.getVelocity());
+			 ball.setPosition(positionBall);
+			 //Check whether any balls hit the walls on the left, right and top side of the game area, in which case they must bounce back.
+			 if(positionBall.getX()== (bottomRight.getX()-ball.getSize().getX())||positionBall.getX()== ball.getSize().getX()||positionBall.getY()== ball.getSize().getY()) {
+				 //v' = v - (2(v . d)/(d . d)) d
+			 }
+			 //Check whether any balls hit the bottom of the field, in which case they must be removed from the game.
+			 if(positionBall.getX()==(bottomRight.getY()-ball.getSize().getX())) {
+				 ball=null;
+			 }
 		};
 		
 		
