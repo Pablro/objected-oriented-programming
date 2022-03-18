@@ -3,27 +3,33 @@ package breakout;
 public class BlockState {
 	// TODO: implement
 	//DONE-check it
-	Point blockTL1;
-	Point blockBR1;
-	Vector size1;
+	Point blockTL;
+	Point blockBR;
+	Vector size;
 	BlockState (Point blockTL, Point blockBR,Vector size){
-		this.blockBR1=blockBR;
-		this.blockTL1=blockTL;
-		this.size1=size;
+		this.blockBR=blockBR;
+		this.blockTL=blockTL;
+		this.size=size;
 	};
 	public Point  getPosition() {
-		int blockcenterx= (blockBR1.getX()-blockTL1.getX())/2;
-		int blockcentery= (blockTL1.getY()-blockBR1.getY())/2;
+		int blockcenterx= (blockBR.getX()-blockTL.getX())/2;
+		int blockcentery= (blockTL.getY()-blockBR.getY())/2;
 		Point center=new Point (blockcenterx,blockcentery);
 		return center;
 	};
 	public Vector getSize() {
-		return size1;
+		return size;
 	}
 	public Point getBlockTL() {
-		return blockTL1;
+		return blockTL;
 	}
 	public Point getBlockBR() {
-		return blockBR1;
+		return blockBR;
+	}
+	public void setBlockTL(Point TL) {
+		blockTL=TL;
+	}
+	public void setBlockBR(Point BR) {
+		blockBR=BR;
 	}
 }

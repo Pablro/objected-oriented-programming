@@ -1,16 +1,15 @@
-Errata
-(Thanks to Machteld Vanderborght, Louanne Theys & Anna Proost, Robbe Serry and Arne Van Damme, Wenzel Sleurs)
+I implemented the bounce of the ball with:
+-paddle
+-blocks with removal of the graphics (not object deletion: reset of TL and BR points in order to make toGUIcoord method convert this point to 0 arguments)
+I set the calculations for determining the vector d for the MirrorOver Method
+I add to setter methods to the BlockState class to be able reset the values for the block deletion
 
-  The size of the pitch can be derived from this variable's value, since the top left point of the field is the origin (i.e. coordinates (0,0)).
+Things as long as I know that are missing:
+implemented collision with walls
+verify winning and loosing conditions
+check the physics specified in toledo
+implement the variable paddleDir 
+-documentation and Junittest
+-restructure the code for easy reading and check logic and complete functionality.
 
-
-
-
-Previous Errata
-* In the sentence "To avoid weird effects, it is important that a ball only bounces on an object when the direction from the ball (vector d) to that object is at a blunt angle from the ball's current velocity (vector v).", the word blunt should be sharp.
-  In the subsequent sentence "You can check this easily by verifying that the dot product of the two vectors (d . b) is positive.", the formula (d . b) should be (d . v).
-
-* There was a contradiction between the text "You shall deal with invalid constructor or method calls defensively." and the later requirement "The constructor(s) of `BreakoutState` must apply defensive programming to deal with invalid parameters. Constructors of `BallState`, `BlockState` and `PaddleState`  must apply contractual programming to deal with invalid parameters.".
-  We have removed the former sentence, i.e. constructors of `BallState`, `BlockState` and `PaddleState`  must apply contractual programming.
-
-* The formula for mirroring a vector over a direction had mysteriously disappeared from the previous version of this text.
+NOTE: LET ME KNOW IF I MISS SOMETHING

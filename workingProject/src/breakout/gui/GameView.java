@@ -156,6 +156,7 @@ public class GameView extends JPanel {
 		Point tl = toGUICoord(tlg);
 		Point br = toGUICoord(brg);
 		g.fillRect(tl.getX(),tl.getY(),br.getX()-tl.getX(),br.getY()-tl.getY());
+		
 	}
 
 	private void paintBlocks(Graphics g) {

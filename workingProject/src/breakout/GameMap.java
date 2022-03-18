@@ -12,18 +12,18 @@ public class GameMap {
 	private static int BLOCK_COLUMNS = 10;
 	private static final Vector INIT_BALL_VELOCITY = new Vector(5,7);
 
-	private static BlockState createBlock(Point bottomLeft) {
+	private static BlockState createBlock(Point topLeft) {
 		Vector marginBL = new Vector(20,20);
 		Vector size = new Vector(WIDTH/BLOCK_COLUMNS-70,HEIGHT/BLOCK_LINES-70);
-		Point blockTL = bottomLeft.plus(marginBL);
+		Point blockTL = topLeft.plus(marginBL);
 		Point blockBR = blockTL.plus(size);
 		// TODO: return a block with given top left (`blockTL`) and bottom right (`blockBR`) Point 
 		//DONE-check it
 		return new BlockState(blockTL,blockBR,size);
 	}
-	private static PaddleState createPaddle(Point bottomLeft) {
+	private static PaddleState createPaddle(Point topLeft) {
 		Vector size = new Vector(WIDTH/BLOCK_COLUMNS/2,HEIGHT/BLOCK_LINES/2);
-		Point center = bottomLeft.plus(size);
+		Point center = topLeft.plus(size);
 		// TODO: return a paddle with given center 
 		//DONE-check it
 		return new PaddleState(center,size);
