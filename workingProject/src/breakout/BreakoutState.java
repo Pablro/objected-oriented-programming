@@ -9,12 +9,12 @@ package breakout;
 //miss the bounce and other tick checks
 //mis to verify physics of the paddle (1/5 of the velocity etc)
 public class BreakoutState {
-	BallState[] balls;
-	BlockState[] blocks;
-	Point bottomRight;
-	PaddleState paddle;
+	private BallState[] balls;
+	private BlockState[] blocks;
+	private Point bottomRight;
+	private PaddleState paddle;
 	
-	
+	//Need defensive programming
 	public BreakoutState(BallState[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
 		this.paddle=paddle;
 		this.balls=balls;

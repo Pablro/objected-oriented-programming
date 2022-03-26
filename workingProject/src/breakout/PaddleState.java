@@ -5,7 +5,7 @@ public class PaddleState {
 	//DONE-check it
 	private Point position;
 	private Vector size;
-	PaddleState (Point position, Vector size){
+	public PaddleState (Point position, Vector size){
 		this.position=position;
 		this.size=size;
 	};
