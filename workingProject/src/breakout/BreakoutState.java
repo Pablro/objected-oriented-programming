@@ -215,13 +215,22 @@ public class BreakoutState {
 		
 		//Check whether any balls hit the walls on the left, right and top side of the game area, in which case they must bounce back.
 		//The rectangle range exceeds the game map
-		if(rangeTL.getY()<=0||rangeTL.getX()<=0||rangeBR.getX()>=bottomRight.getX()){
-			//v' = v - (2(v . d)/(d . d)) d
+		if(positionAfter.getX()>positionBefore.getX()&&rangeBR.getX()>=bottomRight.getX()) {
+			//case: when the ball moves toward right, check if it exceeds the right wall
+			Vector d= findingD(positionBefore,positionAfter);
+			ball.setVelocity(ball.getVelocity().mirrorOver(d));
+		}else if (positionAfter.getX()<positionBefore.getX()&&rangeTL.getX()<=0) {
+			//case: when the ball moves toward left, check if it exceeds the left wall
+			Vector d= findingD(positionBefore,positionAfter);
+			ball.setVelocity(ball.getVelocity().mirrorOver(d));
+		}else if (positionAfter.getY()<positionBefore.getY()&&rangeTL.getY()<=0) {
+			//case: when the ball moves up, check if it exceeds the top wall
 			Vector d= findingD(positionBefore,positionAfter);
 			ball.setVelocity(ball.getVelocity().mirrorOver(d));
 		}
 		//Check whether any balls hit the bottom of the field, in which case they must be removed from the game.
-		if(rangeBR.getX()>=bottomRight.getY()) {
+		else if(positionAfter.getY()>positionBefore.getY()&&rangeBR.getY()>=bottomRight.getY()) {
+			//case: when the ball moves down, check if it exceeds the bottom wall
 			ball=null;
 		}
 
