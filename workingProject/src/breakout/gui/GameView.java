@@ -33,6 +33,7 @@ public class GameView extends JPanel {
 	
 	private void startMovingBalls() {
 		ballTimer = new Timer(ballMoveDelayMillis, actionEvent -> {
+			//Repeat execution every 1 ms (?)
 			moveBalls();
 		});
 		ballTimer.start();
