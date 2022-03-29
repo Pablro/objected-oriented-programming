@@ -44,15 +44,12 @@ public class BreakoutState {
 //still need to check logic
 	public void tick(int paddleDir) {
 		for (BallState ball:getBalls()) {
-			bouncePaddle(ball,getPaddle());
+			bouncePaddle(ball,getPaddle(),paddleDir);
 			bounceBlock(ball,getBlocks());
-
-			//Move all balls one step forward according to their current velocity
-			Point positionBefore=ball.getCenter(); 
 			Point positionAfter=ball.getCenter().plus(ball.getVelocity());
 			ball.setPosition(positionAfter);
+			bounceWall(ball);
 			
-			bounceWall(ball,positionBefore, positionAfter);
 			
 		}
 	}
@@ -78,33 +75,53 @@ public class BreakoutState {
 	}
 	
 	public boolean isWon() {
+		int emptyblocks=0;
 		boolean value=false;
-		if (blocks==null) {
+		for (BlockState block:this.blocks) {
+			if (block.blockBR.equals(new Point(-250,-250))) {
+				if(block.blockTL.equals(new Point(-250,-250))) {
+					emptyblocks++;
+				}
+			}
+		}
+		if (emptyblocks==blocks.length) {
 			value=true;
 		}
+		
 		
 		return value;
 	}
 
 	public boolean isDead() {
+		int emptyballs=0;
 		boolean value=false;
-		if (balls==null) {
+		for (BallState ball:this.balls) {
+			if(ball.getCenter().equals(new Point(-250,-250))) {
+				if(ball.getSize().equals(new Vector(0,0))) {
+					emptyballs++;
+				}
+			};
+		}
+		if(emptyballs==balls.length) {
 			value=true;
 		}
+
+		
 		return value;
 	}
-	private void bouncePaddle(BallState ball,PaddleState paddle)
+	private void bouncePaddle(BallState ball,PaddleState paddle,int PaddleDir)
 
 	{
 		// if coordinate y of the ball (it has to intersect this coordinate with the paddle y coordinate) 
-		int bally=ball.getCenter().getY()+ball.getSize().getY();
+		int ballys=ball.getCenter().getY()+ball.getSize().getY();
 		//ballxs; is the superior limit coordinate of x that ranges the ball lower face that bounce with the paddle. 
 		int ballxs=ball.getCenter().getX()+ball.getSize().getX();
 		//ballxs; is the inferior limit coordinate of x that ranges the ball lower face that bounce with the paddle. 
 		//?ballxi?
 		int ballxi= ball.getCenter().getX()-ball.getSize().getX();
 		//paddle y coordinate 
-		int pady=paddle.getPosition().getY()-paddle.getSize().getY();
+		int padyi=paddle.getPosition().getY()-paddle.getSize().getY();
+		int padys=paddle.getPosition().getY()+paddle.getSize().getY();
 		//ballxs; is the superior limit coordinate of x that ranges the paddle upper face that bounce with the ball 
 		//?padxs?
 		int padxs=paddle.getPosition().getX()+paddle.getSize().getX();
@@ -117,10 +134,17 @@ public class BreakoutState {
 		 for (int bposition=ballxi;bposition<=ballxs;bposition+=7) {
 			 for (int padposition=padxi;padposition<=padxs;padposition+=7) {
 				 if(bposition==padposition) {
-					 if (bally>=pady) {
+					 if (ballys>=padyi &&ballys<padys) {
 						 //here goes the reflection formula to set the new velocity
-						 Vector d= findingD(ball,bposition,bally);
-						 ball.setVelocity(ball.getVelocity().mirrorOver(d));
+						 Vector d= findingD(ball,bposition,ballys);
+							/*To avoid weird effects, it is important that a ball only bounces on an object when the direction from the ball (vector d) to that
+							 *  object is at a sharp angle from the ball's current velocity (vector v).
+							 *  You can check this easily by verifying that the dot product of the two vectors (d . v) is positive.
+							 */
+						 if(d.product(ball.getVelocity())>0) {
+							 Vector withoutpaddlevector=ball.getVelocity().mirrorOver(d);
+							 //Additionally, the ball must speed up by one fifth of the current velocity of the paddle.
+							 ball.setVelocity(withoutpaddlevector.plus(new Vector(paddle.getPosition().getX(),paddle.getPosition().getY()).scaled(PaddleDir*1/5)));}
 					 }
 					 
 				 }
@@ -131,108 +155,158 @@ public class BreakoutState {
 		for (BlockState block:blocks) {
 			//yi|ys are inferior and superior borders of y coordinate
 			//xi|xs are inferior and superior borders for x coordinate
-			int ballyi=ball.getCenter().getY()+ball.getSize().getY();
-			int ballys=ball.getCenter().getY()-ball.getSize().getY();
+			int ballyi=ball.getCenter().getY()-ball.getSize().getY();
+			int ballys=ball.getCenter().getY()+ball.getSize().getY();
 			int ballxi=ball.getCenter().getX()-ball.getSize().getX();
 			int ballxs=ball.getCenter().getX()+ball.getSize().getX();
-			int blockyi=block.getBlockBR().getY();
-			int blockys=block.getBlockTL().getY();
+			int blockys=block.getBlockBR().getY();
+			int blockyi=block.getBlockTL().getY();
 			int blockxs=block.getBlockBR().getX();
 			int blockxi=block.getBlockTL().getX();
 			//Face up-down of the block collision
 			//the unit change (+10) is randomly select for increasing the speed of the game
 			//because the for loops can make the graphics go terrible slow (I am sorry for this)
 			//better idea to detect collision are welcome
-			for(int ballposition=ballxi;ballposition<=ballxs;ballposition+=10) {
-				for(int blockposition=blockxi;blockposition<=blockxs;blockposition+=10) {
+			
+			for(int ballposition=ballxi;ballposition<=ballxs;ballposition+=5) {
+				for(int blockposition=blockxi;blockposition<=blockxs;blockposition+=5) {
 					if (ballposition==blockposition) {
-						if(ballyi>=blockys && ballyi<blockyi) {
-							Vector d= findingD(ball,ballposition,ballyi);
-							ball.setVelocity(ball.getVelocity().mirrorOver(d));
-							//look at gui coordinates conversion. the point here is to set it to 0,0
-							// we can not delete the object, we cause the program to crash
-							block.setBlockBR(new Point(-250,-250));
-							block.setBlockTL(new Point(-250,-250));
+						if(ballyi<=blockys && ballyi>blockyi && ballys>blockys) {
+									Vector d= findingD(ball,ballposition,ballyi);
+									/*To avoid weird effects, it is important that a ball only bounces on an object when the direction from the ball (vector d) to that
+									 *  object is at a sharp angle from the ball's current velocity (vector v).
+									 *  You can check this easily by verifying that the dot product of the two vectors (d . v) is positive.
+									 */
+									if(d.product(ball.getVelocity())>0) {
+										ball.setVelocity(ball.getVelocity().mirrorOver(d));
+										//look at gui coordinates conversion. the point here is to set it to 0,0
+										// we can not delete the object, we cause the program to crash
+										block.setBlockBR(new Point(-250,-250));
+										block.setBlockTL(new Point(-250,-250));}
+
 						}
-						if(ballys<=blockyi && ballys>blockys) {
-							Vector d= findingD(ball,ballposition,ballys);
-							ball.setVelocity(ball.getVelocity().mirrorOver(d));
-							//look at gui coordinates conversion. the point here is to set it to 0,0
-							// we can not delete the object, we cause the program to crash
-							block.setBlockBR(new Point(-250,-250));
-							block.setBlockTL(new Point(-250,-250));
+						if(ballys>=blockyi && ballys<blockys && ballyi<blockyi) {
+								Vector d= findingD(ball,ballposition,ballys);
+								/*To avoid weird effects, it is important that a ball only bounces on an object when the direction from the ball (vector d) to that
+								 *  object is at a sharp angle from the ball's current velocity (vector v).
+								 *  You can check this easily by verifying that the dot product of the two vectors (d . v) is positive.
+								 */
+								if(d.product(ball.getVelocity())>0) {
+									ball.setVelocity(ball.getVelocity().mirrorOver(d));
+									//look at gui coordinates conversion. the point here is to set it to 0,0
+									// we can not delete the object, we cause the program to crash
+									block.setBlockBR(new Point(-250,-250));
+									block.setBlockTL(new Point(-250,-250));}
+								}
+								
+							}
+
 						}
-					}
-				}
 			}
+			
 			//Face Left_right of the block collision
 			//the unit change (+10) is randomly select for increasing the speed of the game
 			//because the for loops can make the graphics go terrible slow (I am sorry for this)
 			//better idea to detect collision are welcome
-			for(int ballposition=ballyi;ballposition<=ballys;ballposition=+10) {
-				for(int blockposition=blockyi;blockposition<=blockys;blockposition=+10) {
-					if(ballposition==blockposition) {
-						if(ballxi<=blockxs && ballxi>blockxi) {
+			//same principle for this case the sensitivity and the program performance work well at this unit change in the loops
+			for(int ballposition=ballyi;ballposition<=ballys;ballposition+=7) {
+				for(int blockposition=blockyi;blockposition<=blockys;blockposition+=8) {
+					
+					if (ballposition==blockposition) {
+						if(ballxi<=blockxs && ballxi>blockxi && ballxs>blockxs) {
 							Vector d= findingD(ball,ballxi,ballposition);
+							/*To avoid weird effects, it is important that a ball only bounces on an object when the direction from the ball (vector d) to that
+							 *  object is at a sharp angle from the ball's current velocity (vector v).
+							 *  You can check this easily by verifying that the dot product of the two vectors (d . v) is positive.
+							 */
+							if(d.product(ball.getVelocity())>0) {
+								ball.setVelocity(ball.getVelocity().mirrorOver(d));
+								//look at gui coordinates conversion. the point here is to set it to 0,0
+								// we can not delete the object, we cause the program to crash
+								block.setBlockBR(new Point(-250,-250));
+								block.setBlockTL(new Point(-250,-250));}
+
+						}
+						if(ballxs>=blockxi && ballxs<blockxs && ballxi<blockxi) {
+							Vector d= findingD(ball,ballxs,ballposition);
+							/*To avoid weird effects, it is important that a ball only bounces on an object when the direction from the ball (vector d) to that
+							 *  object is at a sharp angle from the ball's current velocity (vector v).
+							 *  You can check this easily by verifying that the dot product of the two vectors (d . v) is positive.
+							 */
+							if(d.product(ball.getVelocity())>0) {
 							ball.setVelocity(ball.getVelocity().mirrorOver(d));
 							//look at gui coordinates conversion. the point here is to set it to 0,0
 							// we can not delete the object, we cause the program to crash
 							block.setBlockBR(new Point(-250,-250));
-							block.setBlockTL(new Point(-250,-250));
-							
-						}
-						if(ballxs>=blockxi && ballxs<blockxs) {
-							Vector d= findingD(ball,ballxs,ballposition);
-							ball.setVelocity(ball.getVelocity().mirrorOver(d));
-							block.setBlockBR(new Point(-250,-250));
-							block.setBlockTL(new Point(-250,-250));
-							
-						}
+							block.setBlockTL(new Point(-250,-250));}
+							}
+								
 					}
+
 				}
 			}
+
 			
-			}
+		}
 		
 	}
 	
-	private void bounceWall(BallState ball,Point positionBefore, Point positionAfter) {			
-		//A rectangle range generated by the ball status one step moved before and moved after 
-		//The four vertices of the ball moved before
-		Point TLBefore = new Point (positionBefore.getX()-ball.getSize().getX(),positionBefore.getY()-ball.getSize().getY());
-		Point BRBefore = new Point(positionBefore.getX()+ball.getSize().getX(),positionBefore.getY()+ball.getSize().getY());
-		Point TRBefore = new Point (positionBefore.getX()+ball.getSize().getX(),positionBefore.getY()-ball.getSize().getY());
-		Point BLBefore = new Point (positionBefore.getX()-ball.getSize().getX(),positionBefore.getY()+ball.getSize().getY());
-		//The four vertices of the ball moved after
-		Point TLAfter = new Point (positionAfter.getX()-ball.getSize().getX(),positionAfter.getY()-ball.getSize().getY());
-		Point BRAfter = new Point (positionAfter.getX()+ball.getSize().getX(),positionAfter.getY()+ball.getSize().getY());
-		Point TRAfter = new Point (positionAfter.getX()+ball.getSize().getX(),positionAfter.getY()-ball.getSize().getY());
-		Point BLAfter = new Point (positionAfter.getX()-ball.getSize().getX(),positionAfter.getY()+ball.getSize().getY());
-		//TL and BR of the rectangle range of moving ball 
-		Point rangeTL=new Point (Math.min(Math.min(Math.min(TLBefore.getX(), BRBefore.getX()),Math.min(TLAfter.getX(), BRAfter.getX())),Math.min(Math.min(TRBefore.getX(), BLBefore.getX()),Math.min(TRAfter.getX(), BLAfter.getX()))),Math.min(Math.min(Math.min(TLBefore.getY(), BRBefore.getY()),Math.min(TLAfter.getY(), BRAfter.getY())),Math.min(Math.min(TRBefore.getY(), BLBefore.getY()),Math.min(TRAfter.getY(), BLAfter.getY()))));
-		Point rangeBR=new Point (Math.max(Math.max(Math.max(TLBefore.getX(), BRBefore.getX()),Math.max(TLAfter.getX(), BRAfter.getX())),Math.max(Math.max(TRBefore.getX(), BLBefore.getX()),Math.max(TRAfter.getX(), BLAfter.getX()))),Math.max(Math.max(Math.max(TLBefore.getY(), BRBefore.getY()),Math.max(TLAfter.getY(), BRAfter.getY())),Math.max(Math.max(TRBefore.getY(), BLBefore.getY()),Math.max(TRAfter.getY(), BLAfter.getY()))));
-		
-		
-		//Check whether any balls hit the walls on the left, right and top side of the game area, in which case they must bounce back.
-		//The rectangle range exceeds the game map
-		if(positionAfter.getX()>positionBefore.getX()&&rangeBR.getX()>=bottomRight.getX()) {
-			//case: when the ball moves toward right, check if it exceeds the right wall
-			Vector d= findingD(positionBefore,positionAfter);
-			ball.setVelocity(ball.getVelocity().mirrorOver(d));
-		}else if (positionAfter.getX()<positionBefore.getX()&&rangeTL.getX()<=0) {
-			//case: when the ball moves toward left, check if it exceeds the left wall
-			Vector d= findingD(positionBefore,positionAfter);
-			ball.setVelocity(ball.getVelocity().mirrorOver(d));
-		}else if (positionAfter.getY()<positionBefore.getY()&&rangeTL.getY()<=0) {
-			//case: when the ball moves up, check if it exceeds the top wall
-			Vector d= findingD(positionBefore,positionAfter);
-			ball.setVelocity(ball.getVelocity().mirrorOver(d));
+	private void bounceWall(BallState ball) {		
+		int ballyi=ball.getCenter().getY()-ball.getSize().getY();
+		int ballys=ball.getCenter().getY()+ball.getSize().getY();
+		int ballxi=ball.getCenter().getX()-ball.getSize().getX();
+		int ballxs=ball.getCenter().getX()+ball.getSize().getX();
+		int wallxi=0;
+		int wallxs=bottomRight.getX();
+		int wallyi=0;
+		int wallys=bottomRight.getY();
+		for(int ballposition=ballxi;ballposition<=ballxs;ballposition+=5) {
+			for(int blockposition=wallxi;blockposition<=wallxs;blockposition+=5) {
+				if (ballposition==blockposition) {
+					if(ballyi<=wallys && ballyi>wallyi && ballys>wallys) {
+								ball.setPosition(new Point(-250,-250));
+								ball.setSize(new Vector(0,0));
+								//look at gui coordinates conversion. the point here is to set it to 0,0
+								// we can not delete the object, we cause the program to crash
+
+
+					}
+					if(ballys>=wallyi && ballys<wallys && ballyi<wallyi) {
+							
+							//look at gui coordinates conversion. the point here is to set it to 0,0
+							// we can not delete the object, we cause the program to crash
+						Vector d= findingD(ball,ballposition,ballys);
+						ball.setVelocity(ball.getVelocity().mirrorOver(d));
+							
+						}
+
+					}
+			}
 		}
-		//Check whether any balls hit the bottom of the field, in which case they must be removed from the game.
-		else if(positionAfter.getY()>positionBefore.getY()&&rangeBR.getY()>=bottomRight.getY()) {
-			//case: when the ball moves down, check if it exceeds the bottom wall
-			ball=null;
+		for(int ballposition=ballyi;ballposition<=ballys;ballposition+=7) {
+			for(int blockposition=wallyi;blockposition<=wallys;blockposition+=8) {
+				
+				if (ballposition==blockposition) {
+					if(ballxi<=wallxs && ballxi>wallxi && ballxs>wallxs) {
+						Vector d= findingD(ball,ballxi,ballposition);
+						ball.setVelocity(ball.getVelocity().mirrorOver(d));
+						//look at gui coordinates conversion. the point here is to set it to 0,0
+						// we can not delete the object, we cause the program to crash
+
+
+					}
+					if(ballxs>=wallxi && ballxs<wallxs && ballxi<wallxi) {
+						Vector d= findingD(ball,ballxs,ballposition);
+						ball.setVelocity(ball.getVelocity().mirrorOver(d));
+						//look at gui coordinates conversion. the point here is to set it to 0,0
+						// we can not delete the object, we cause the program to crash
+						}
+							
+				}
+
+			}
 		}
+		
 
 	}
 	
@@ -252,18 +326,5 @@ public class BreakoutState {
 		return normalized;
 	}
 	
-	//Overload the method findingD for bounceWall method
-	private Vector findingD(Point positionBefore,Point positionAfter) {
-		/*
-		 * The direction d is given by the line between the center of the ball 
-		 * and the point on the ball's surface where it hits the obstacle
-		 * 
-		 *  If d is normalized, i.e. ||d|| = sqrt(d . d) = 1, then dividing by (d . d) is of course not necessary.
-  		*	You may use the method `Vector.mirrorOver` which implements this computation already.
-  		*	Method MirrorOver from Vector class considers d as normalized vector.
-		 */
-		Vector unormalized= new Vector(positionAfter.getX()-positionBefore.getX(),positionAfter.getY()-positionBefore.getY());
-		 Vector normalized=unormalized.scaledDiv((int)Math.sqrt(Math.pow(unormalized.getX(),2 )+Math.pow(unormalized.getY(), 2)));
-		return normalized;
-	}
+
 }
