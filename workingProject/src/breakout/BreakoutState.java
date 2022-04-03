@@ -3,45 +3,95 @@ package breakout;
 
 
 // TODO: implement, document
-//Some DONE
-//miss to implement tick
-// I have establish the ball motion
-//miss the bounce and other tick checks
-//mis to verify physics of the paddle (1/5 of the velocity etc)
+
+/**
+ * 
+ * @invar if their are null you have not initialize the BreakoutState correctly|getBalls()!=null
+ * @invar if their are null you have not initialize the BreakoutState correctly|getBlocks()!=null
+ * @invar if their are null you have not initialize the BreakoutState correctly|getPaddle()!=null
+ * @invar if their are null you have not initialize the BreakoutState correctly|getBottomRight()!=null
+ * 
+ *
+ */
 public class BreakoutState {
-	private BallState[] balls;
-	private BlockState[] blocks;
-	private Point bottomRight;
-	private PaddleState paddle;
+	/**
+	 *
+	 *@invar |balls!=null
+	 *@invar |blocks!=null
+	 *@invar |bottomRight!=null
+	 *@invar |paddle!=null
+	 *@invar paddle field enforcement| getPaddle().getPosition().getY()-getPaddle().getSize().getY()>=0 &&
+	 *		| getPaddle().getPosition().getY()+getPaddle().getSize().getY()<=getBottomRight().getY() &&
+	 *		| getPaddle().getPosition().getX()-getPaddle().getSize().getX()>=0 &&
+	 *		|getPaddle().getPosition().getX()+getPaddle().getSize().getX()<=getBottomRight().getX()
+	 *@representationObject
+	 */
+	private final BallState[] balls;
+	private final BlockState[] blocks;
+	private final Point bottomRight;
+	private final PaddleState paddle;
+	private Vector unormalizedD;
+
 	
-	//Need defensive programming
+		/**
+		 * 
+		 *@pre |balls!=null
+		 *@pre |blocks!=null
+		 *@pre |bottomRight!=null
+		 *@pre	|paddle!=null
+		 *@mutates |this
+		 *@post |getPaddle().equals(paddle)
+		 *@post |getBottomRight().equals(bottomRight)
+		 *
+		 *
+		 *
+		 */
 	public BreakoutState(BallState[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
+
 		this.paddle=paddle;
 		this.balls=balls;
 		this.bottomRight=bottomRight;
 		this.blocks=blocks;
-		
+
 	}
-	
+
+	/**
+	 * 
+	 *
+	 * @inspects
+	 */
 	public BallState[] getBalls() {
 		
-		return balls;
+		return balls.clone();
 	}
-
+	/**
+	 * 
+	 * 
+	 * @inspects
+	 */
 	public BlockState[] getBlocks() {
 		
-		return blocks;
+		return blocks.clone();
 	}
-
+	/**
+	 * 
+	 * @inspects
+	 */
 	public PaddleState getPaddle() {
 		return paddle;
 	}
-
+	/**
+	 * 
+	 * @inspects
+	 */
 	public Point getBottomRight() {
 		return bottomRight;
 	}
-//implement the bounce blocks with removing blocks
-//still need to check logic
+	/**
+	 *@pre |paddleDir==1 || paddleDir==-1 || paddleDir==0 
+	 *
+	 */
+	
 	public void tick(int paddleDir) {
 		for (BallState ball:getBalls()) {
 			bouncePaddle(ball,getPaddle(),paddleDir);
@@ -55,79 +105,89 @@ public class BreakoutState {
 	}
 		
 		
-
+	/**
+	 *moves paddle position according to velocity
+	 *@post |getPaddle().getPosition().equals(old(getPaddle().getPosition().plus(new Vector(10,0)))) || 
+	 *		|getPaddle().getPosition().equals(old(getPaddle().getPosition()))
+	 */
 	public void movePaddleRight() {
 		//tr stands for TOP-Right
-		//randomly selected 40, for increasing speed of paddle movement
-		Point value=this.paddle.getPosition().plus(new Vector(40,0));
-		Point tr= this.paddle.getPosition().plus(this.paddle.getSize());
+		Point value=getPaddle().getPosition().plus(new Vector(10,0));
+		Point tr= getPaddle().getPosition().plus(getPaddle().getSize());
 		if(tr.getX()<=50000) {
-			this.paddle.setPosition(value);}
+			getPaddle().setPosition(value);}
 	}
-
+	/**
+	 * moves paddle position according to velocity
+	 *@post |getPaddle().getPosition().equals(old(getPaddle().getPosition().minus(new Vector(10,0)))) || 
+	 *		|getPaddle().getPosition().equals(old(getPaddle().getPosition()))
+	 */
 	public void movePaddleLeft() {
-		// tl stands for TOP-Left
-		//randomly selected 40, for increasing speed of paddle movement
-		Point value=this.paddle.getPosition().minus(new Vector(40,0));
-		Point tl= this.paddle.getPosition().minus(this.paddle.getSize());
+		Point value=getPaddle().getPosition().minus(new Vector(10,0));
+		Point tl= getPaddle().getPosition().minus(getPaddle().getSize());
 		if(tl.getX()>=0) {
-			this.paddle.setPosition(value);}
+			getPaddle().setPosition(value);}
 	}
-	
+	/**
+	 * 
+	 * @post |result==true || result==false
+	 */
 	public boolean isWon() {
 		int emptyblocks=0;
 		boolean value=false;
-		for (BlockState block:this.blocks) {
-			if (block.blockBR.equals(new Point(-250,-250))) {
-				if(block.blockTL.equals(new Point(-250,-250))) {
+		for (BlockState block:getBlocks()) {
+			if (block.getBlockBR().equals(new Point(-250,-250))) {
+				if(block.getBlockTL().equals(new Point(-250,-250))) {
 					emptyblocks++;
 				}
 			}
 		}
-		if (emptyblocks==blocks.length) {
+		if (emptyblocks==getBlocks().length) {
 			value=true;
 		}
 		
 		
 		return value;
 	}
-
+	/**
+	 *
+	 *@post |result==true || result==false	 */
 	public boolean isDead() {
 		int emptyballs=0;
 		boolean value=false;
-		for (BallState ball:this.balls) {
+		for (BallState ball:getBalls()) {
 			if(ball.getCenter().equals(new Point(-250,-250))) {
 				if(ball.getSize().equals(new Vector(0,0))) {
 					emptyballs++;
 				}
 			};
 		}
-		if(emptyballs==balls.length) {
+		if(emptyballs==getBalls().length) {
 			value=true;
 		}
 
 		
 		return value;
 	}
-	private void bouncePaddle(BallState ball,PaddleState paddle,int PaddleDir)
+	/**
+	 *
+	 *@pre|paddleDir==1 || paddleDir==-1 || paddleDir==0 
+	 *@pre|ball!=null
+	 *@pre|paddle!=null
+	 *@post|ball.getVelocity()!=null
+	 * 
+	 */
+	private void bouncePaddle(BallState ball,PaddleState paddle, int paddleDir)
 
 	{
-		// if coordinate y of the ball (it has to intersect this coordinate with the paddle y coordinate) 
-		int ballys=ball.getCenter().getY()+ball.getSize().getY();
-		//ballxs; is the superior limit coordinate of x that ranges the ball lower face that bounce with the paddle. 
-		int ballxs=ball.getCenter().getX()+ball.getSize().getX();
-		//ballxs; is the inferior limit coordinate of x that ranges the ball lower face that bounce with the paddle. 
-		//?ballxi?
-		int ballxi= ball.getCenter().getX()-ball.getSize().getX();
-		//paddle y coordinate 
-		int padyi=paddle.getPosition().getY()-paddle.getSize().getY();
-		int padys=paddle.getPosition().getY()+paddle.getSize().getY();
-		//ballxs; is the superior limit coordinate of x that ranges the paddle upper face that bounce with the ball 
-		//?padxs?
-		int padxs=paddle.getPosition().getX()+paddle.getSize().getX();
-		//ballxs; is the inferior limit coordinate of x that ranges the paddle upper face that bounce with the ball  
-		//?padxi?
-		int padxi=paddle.getPosition().getX()-paddle.getSize().getX();
+		//Collision coordinates: for defining a range of possible bouncing points
+		int ballys=ballCoordinates(ball)[1];
+		int ballxs=ballCoordinates(ball)[3];
+		int ballxi= ballCoordinates(ball)[2]; 
+		int padyi=paddleCoordinates(paddle)[0];
+		int padys=paddleCoordinates(paddle)[1];
+		int padxs=paddleCoordinates(paddle)[2];
+		int padxi=paddleCoordinates(paddle)[3];
 		//the unit change (+7) is randomly select for increasing the speed of the game
 		//because the for loops can make the graphics go terrible slow (I am sorry for this)
 		//better idea to detect collision are welcome
@@ -144,29 +204,35 @@ public class BreakoutState {
 						 if(d.product(ball.getVelocity())>0) {
 							 Vector withoutpaddlevector=ball.getVelocity().mirrorOver(d);
 							 //Additionally, the ball must speed up by one fifth of the current velocity of the paddle.
-							 ball.setVelocity(withoutpaddlevector.plus(new Vector(paddle.getPosition().getX(),paddle.getPosition().getY()).scaled(PaddleDir*1/5)));}
+							 ball.setVelocity(withoutpaddlevector.plus(new Vector(paddle.getPosition().getX(),paddle.getPosition().getY()).scaled(paddleDir*1/5)));}
 					 }
 					 
 				 }
 			 }
 		 }
 	}
+	/**
+	 *
+	 * @pre|ball!=null
+	 * @pre|blocks!=null
+	 * @post |ball.getVelocity() != null
+	 *
+	 * 
+	 */
 	private void bounceBlock(BallState ball,BlockState[] blocks) {
 		for (BlockState block:blocks) {
-			//yi|ys are inferior and superior borders of y coordinate
-			//xi|xs are inferior and superior borders for x coordinate
-			int ballyi=ball.getCenter().getY()-ball.getSize().getY();
-			int ballys=ball.getCenter().getY()+ball.getSize().getY();
-			int ballxi=ball.getCenter().getX()-ball.getSize().getX();
-			int ballxs=ball.getCenter().getX()+ball.getSize().getX();
-			int blockys=block.getBlockBR().getY();
-			int blockyi=block.getBlockTL().getY();
-			int blockxs=block.getBlockBR().getX();
-			int blockxi=block.getBlockTL().getX();
+			//Collision coordinates: for defining a range of possible bouncing points
+			int ballyi=ballCoordinates(ball)[0];
+			int ballys=ballCoordinates(ball)[1];
+			int ballxi=ballCoordinates(ball)[2];
+			int ballxs=ballCoordinates(ball)[3];
+			int blockys=blockCoordinates(block)[0];
+			int blockyi=blockCoordinates(block)[1];
+			int blockxs=blockCoordinates(block)[2];
+			int blockxi=blockCoordinates(block)[3];
 			//Face up-down of the block collision
 			//the unit change (+10) is randomly select for increasing the speed of the game
-			//because the for loops can make the graphics go terrible slow (I am sorry for this)
-			//better idea to detect collision are welcome
+			//because the for loops can make the graphics go terribly slow.
 			
 			for(int ballposition=ballxi;ballposition<=ballxs;ballposition+=5) {
 				for(int blockposition=blockxi;blockposition<=blockxs;blockposition+=5) {
@@ -179,8 +245,8 @@ public class BreakoutState {
 									 */
 									if(d.product(ball.getVelocity())>0) {
 										ball.setVelocity(ball.getVelocity().mirrorOver(d));
-										//look at gui coordinates conversion. the point here is to set it to 0,0
-										// we can not delete the object, we cause the program to crash
+										//Based in the gui coordinates conversion. the point here is to set it to 0,0
+
 										block.setBlockBR(new Point(-250,-250));
 										block.setBlockTL(new Point(-250,-250));}
 
@@ -193,8 +259,7 @@ public class BreakoutState {
 								 */
 								if(d.product(ball.getVelocity())>0) {
 									ball.setVelocity(ball.getVelocity().mirrorOver(d));
-									//look at gui coordinates conversion. the point here is to set it to 0,0
-									// we can not delete the object, we cause the program to crash
+									//Based in the gui coordinates conversion. the point here is to set it to 0,0
 									block.setBlockBR(new Point(-250,-250));
 									block.setBlockTL(new Point(-250,-250));}
 								}
@@ -206,9 +271,8 @@ public class BreakoutState {
 			
 			//Face Left_right of the block collision
 			//the unit change (+10) is randomly select for increasing the speed of the game
-			//because the for loops can make the graphics go terrible slow (I am sorry for this)
-			//better idea to detect collision are welcome
-			//same principle for this case the sensitivity and the program performance work well at this unit change in the loops
+			//because the for loops can make the graphics go terribly slow
+			//same principle for this case the sensitivity and the program performance work well at this unit change in the for loops
 			for(int ballposition=ballyi;ballposition<=ballys;ballposition+=7) {
 				for(int blockposition=blockyi;blockposition<=blockys;blockposition+=8) {
 					
@@ -221,8 +285,7 @@ public class BreakoutState {
 							 */
 							if(d.product(ball.getVelocity())>0) {
 								ball.setVelocity(ball.getVelocity().mirrorOver(d));
-								//look at gui coordinates conversion. the point here is to set it to 0,0
-								// we can not delete the object, we cause the program to crash
+								//Based in the gui coordinates conversion. the point here is to set it to 0,0
 								block.setBlockBR(new Point(-250,-250));
 								block.setBlockTL(new Point(-250,-250));}
 
@@ -235,8 +298,7 @@ public class BreakoutState {
 							 */
 							if(d.product(ball.getVelocity())>0) {
 							ball.setVelocity(ball.getVelocity().mirrorOver(d));
-							//look at gui coordinates conversion. the point here is to set it to 0,0
-							// we can not delete the object, we cause the program to crash
+							//Based in the gui coordinates conversion. the point here is to set it to 0,0
 							block.setBlockBR(new Point(-250,-250));
 							block.setBlockTL(new Point(-250,-250));}
 							}
@@ -250,16 +312,22 @@ public class BreakoutState {
 		}
 		
 	}
-	
-	private void bounceWall(BallState ball) {		
-		int ballyi=ball.getCenter().getY()-ball.getSize().getY();
-		int ballys=ball.getCenter().getY()+ball.getSize().getY();
-		int ballxi=ball.getCenter().getX()-ball.getSize().getX();
-		int ballxs=ball.getCenter().getX()+ball.getSize().getX();
-		int wallxi=0;
-		int wallxs=bottomRight.getX();
-		int wallyi=0;
-		int wallys=bottomRight.getY();
+	/**
+	 *
+	 * @pre |ball!=null
+	 *@post |ball.getVelocity()!=null
+	 */
+
+	private void bounceWall(BallState ball) {	
+		//Collision coordinates: for defining a range of possible bouncing points
+		int ballyi=ballCoordinates(ball)[0];
+		int ballys=ballCoordinates(ball)[1];
+		int ballxi=ballCoordinates(ball)[2];
+		int ballxs=ballCoordinates(ball)[3];
+		int wallxi=wallCoordinates()[0];
+		int wallxs=wallCoordinates()[1];
+		int wallyi=wallCoordinates()[2];
+		int wallys=wallCoordinates()[3];
 		for(int ballposition=ballxi;ballposition<=ballxs;ballposition+=5) {
 			for(int blockposition=wallxi;blockposition<=wallxs;blockposition+=5) {
 				if (ballposition==blockposition) {
@@ -267,14 +335,12 @@ public class BreakoutState {
 								ball.setPosition(new Point(-250,-250));
 								ball.setSize(new Vector(0,0));
 								//look at gui coordinates conversion. the point here is to set it to 0,0
-								// we can not delete the object, we cause the program to crash
 
 
 					}
 					if(ballys>=wallyi && ballys<wallys && ballyi<wallyi) {
 							
-							//look at gui coordinates conversion. the point here is to set it to 0,0
-							// we can not delete the object, we cause the program to crash
+						//Based in the gui coordinates conversion. the point here is to set it to 0,0
 						Vector d= findingD(ball,ballposition,ballys);
 						ball.setVelocity(ball.getVelocity().mirrorOver(d));
 							
@@ -290,16 +356,14 @@ public class BreakoutState {
 					if(ballxi<=wallxs && ballxi>wallxi && ballxs>wallxs) {
 						Vector d= findingD(ball,ballxi,ballposition);
 						ball.setVelocity(ball.getVelocity().mirrorOver(d));
-						//look at gui coordinates conversion. the point here is to set it to 0,0
-						// we can not delete the object, we cause the program to crash
+						//Based in the gui coordinates conversion. the point here is to set it to 0,0
 
 
 					}
 					if(ballxs>=wallxi && ballxs<wallxs && ballxi<wallxi) {
 						Vector d= findingD(ball,ballxs,ballposition);
 						ball.setVelocity(ball.getVelocity().mirrorOver(d));
-						//look at gui coordinates conversion. the point here is to set it to 0,0
-						// we can not delete the object, we cause the program to crash
+						//Based in the gui coordinates conversion. the point here is to set it to 0,0
 						}
 							
 				}
@@ -309,19 +373,139 @@ public class BreakoutState {
 		
 
 	}
+	/*
+	 * 	 * These are collision coordinates taken from TL, TR, BL, BR of each rectange.
+	 * They are used to establish a set of points in between where a collision can happen
+	 */
+	/**
+
+	 * 
+	 * @pre Enforce balls in the field| (ball.getCenter().getY()-ball.getSize().getY()>=0 &&
+	 *		| ball.getCenter().getY()+ball.getSize().getY()<=getBottomRight().getY() &&
+	 *		| ball.getCenter().getX()-ball.getSize().getX()>=0 &&
+	 *		|ball.getCenter().getX()+ball.getSize().getX()<=getBottomRight().getX()) ||
+	 *		|ball.getCenter().equals(new Point(-250,-250))
+	 * @pre |ball!=null
+	 *@creates |result
+	 *@post |result!=null
+	 *
+	 */
+	private int[] ballCoordinates(BallState ball) {
+		int[] ballcoordinates=new int[4];
+		//yi
+		ballcoordinates[0]=ball.getCenter().getY()-ball.getSize().getY();
+		//ys
+		ballcoordinates[1]=ball.getCenter().getY()+ball.getSize().getY();
+		//xi
+		ballcoordinates[2]=ball.getCenter().getX()-ball.getSize().getX();
+		//xs
+		ballcoordinates[3]=ball.getCenter().getX()+ball.getSize().getX();
+		return ballcoordinates;
+	}
+	/*
+	 * 	These are collision coordinates taken from TL, TR, BL, BR of each rectange.
+	 * They are used to establish a set of points in between where a collision can happen
+	 */
+	/**
+
+	 * @creates |result
+	 * @post |result!=null
+	 */
+	private int[] wallCoordinates() {
+		int[] wallcoordinates=new int[4];
+		//xi
+		wallcoordinates[0]=0;
+		//xs
+		wallcoordinates[1]=getBottomRight().getX();
+		//yi
+		wallcoordinates[2]=0;
+		//ys
+		wallcoordinates[3]=getBottomRight().getY();
+		return wallcoordinates;
+	}
+	/*
+	 * These are collision coordinates taken from TL, TR, BL, BR of each rectange.
+	 * They are used to establish a set of points in between where a collision can happen
+	 */
+	/**
+	 * @pre Enforce blocks in the field| (block.getBlockTL().getY()>=0 &&
+	 *		| block.getBlockBR().getY()<=getBottomRight().getY() &&
+	 *		| block.getBlockTL().getX()>=0 &&
+	 *		|block.getBlockBR().getX()<=getBottomRight().getX()) ||
+	 *		|(block.getBlockBR().equals(new Point(-250,-250)) &&
+	 *		|block.getBlockTL().equals(new Point(-250,-250)))
+	 * @pre block!=null
+	 * @creates |result
+	 * @post |result!=null
+	 * 
+	 */
+	private int[] blockCoordinates(BlockState block) {
+		int [] blockcoordinates=new int[4];
+		//ys
+		blockcoordinates[0]=block.getBlockBR().getY();
+		//yi
+		blockcoordinates[1]=block.getBlockTL().getY();
+		//xs
+		blockcoordinates[2]=block.getBlockBR().getX();
+		//xi
+		blockcoordinates[3]=block.getBlockTL().getX();
+		return blockcoordinates;
+	}
+	/*
+	 * These are collision coordinates taken from TL, TR, BL, BR of each rectange.
+	 * They are used to establish a set of points in between where a collision can happen
+	 */
+	/**
+	 *@pre |paddle!=null
+	 *@creates |result
+	 *@post| result!=null
+	 */
+	private int[] paddleCoordinates(PaddleState paddle) {
+		int[] paddlecoordinates=new int[4];
+		//yi
+		paddlecoordinates[0]=paddle.getPosition().getY()-paddle.getSize().getY();
+		//ys
+		paddlecoordinates[1]=paddle.getPosition().getY()+paddle.getSize().getY();
+		//xs
+		paddlecoordinates[2]=paddle.getPosition().getX()+paddle.getSize().getX();
+		//xi
+		paddlecoordinates[3]=paddle.getPosition().getX()-paddle.getSize().getX();
+		return paddlecoordinates;
+	}
 	
-	
+	/**
+	 * 
+	 * @pre |ball!=null
+	 * @creates |result
+	 * @mutates |this.unormalizedD
+	 * @post |getUnormalizedD().equals(new Vector(crossx-ball.getCenter().getX(),crossy-ball.getCenter().getY()))
+	 */
+	private void Unormalized(BallState ball, int crossx, int crossy) {
+		Vector unormalized=new Vector(crossx-ball.getCenter().getX(),crossy-ball.getCenter().getY());
+		this.unormalizedD=unormalized;
 		
+	}
+	/**
+	 * @inspects
+	 * 
+	 */
+	private  Vector getUnormalizedD() {
+		return this.unormalizedD;
+	}
+	/*
+	 * The direction d is given by the line between the center of the ball 
+	 * and the point on the ball's surface where it hits the obstacle
+	 * If d is normalized, i.e. ||d|| = sqrt(d . d) = 1, then dividing by (d . d) is of course not necessary.
+	 * Method MirrorOver from Vector class considers d as normalized vector.
+	 * You may use the method `Vector.mirrorOver` which implements this computation already.
+	 */
+	/**	
+	 * @pre |ball!=null
+	 * @post normalize|result.equals(getUnormalizedD().scaledDiv((int)Math.sqrt(Math.pow(getUnormalizedD().getX(),2 )+Math.pow(getUnormalizedD().getY(), 2))))
+	 */
 	private Vector findingD(BallState ball,int crossx, int crossy) {
-		/*
-		 * The direction d is given by the line between the center of the ball 
-		 * and the point on the ball's surface where it hits the obstacle
-		 * 
-		 *  If d is normalized, i.e. ||d|| = sqrt(d . d) = 1, then dividing by (d . d) is of course not necessary.
-  		*	You may use the method `Vector.mirrorOver` which implements this computation already.
-  		*	Method MirrorOver from Vector class considers d as normalized vector.
-		 */
-		Vector unormalized= new Vector(crossx-ball.getCenter().getX(),crossy-ball.getCenter().getY());
+		Unormalized(ball,crossx,crossy);
+		Vector unormalized=getUnormalizedD();
 		 Vector normalized=unormalized.scaledDiv((int)Math.sqrt(Math.pow(unormalized.getX(),2 )+Math.pow(unormalized.getY(), 2)));
 		return normalized;
 	}

@@ -59,7 +59,7 @@ class SubmissionTestSuite {
 		       
 		       
 	o	       
-	###	       
+	##	       
 		       
 		     
 
@@ -85,7 +85,7 @@ class SubmissionTestSuite {
 	@Test
 	void testBreakoutStateNull() {
 		assertThrows(IllegalArgumentException.class, 
-				() -> new BreakoutState(null,oneBlock,bottomRight,paddle) );
+				()-> new BreakoutState(null,oneBlock,bottomRight,paddle) );
 		assertThrows(IllegalArgumentException.class, 
 				() -> new BreakoutState(oneBall,null,bottomRight,paddle) );
 		assertThrows(IllegalArgumentException.class, 
@@ -113,7 +113,7 @@ class SubmissionTestSuite {
 
 	@Test
 	void testTickBounceBlock() {
-		for(int i = 0; i < 300; ++i) {
+		for(int i = 0; i < 300; i++) {
 			stateBeforeBounceBlock.tick(1);
 		}
 		assertEquals(1,stateBeforeBounceBlock.getBalls().length);

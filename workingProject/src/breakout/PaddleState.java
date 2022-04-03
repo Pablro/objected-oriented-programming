@@ -17,5 +17,6 @@ public class PaddleState {
 	}
 	public void setPosition(Point position) {
 		this.position=position;
+
 	};
 }
