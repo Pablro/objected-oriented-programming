@@ -72,6 +72,7 @@ public class PaddleState {
 	 * @pre | position != null
      * @pre | position.getX()>=0 && position.getY()>=0 && position.getX()<=30000 && position.getY()<=50000
 	 * @post | result != null
+	 * @post | result.getPosition().equals(position)
 	 */
 	public PaddleState getNewPosition(Point position) {
 		return PaddleState.valueOf(new Point(position.getX(),position.getY()), size) ;
