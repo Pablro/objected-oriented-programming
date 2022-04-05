@@ -30,8 +30,8 @@ class PaddleStateTest {
 		//myPaddle10.setPosition(null);
 		//myPaddle10.setPosition(new Point(-100,-100));
 		//myPaddle10.setPosition(new Point(100000,100000));
-		myPaddle1.setPosition(new Point(2000,2000));
-		assertEquals(new Point(2000,2000),myPaddle1.getPosition());
+		myPaddle10=myPaddle10.getNewPosition(new Point(3000,3000));
+		assertEquals(new Point(3000,3000),myPaddle10.getPosition());
 		
 		
 	}

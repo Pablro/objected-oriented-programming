@@ -29,7 +29,7 @@ public class BreakoutState {
 	private final BallState[] balls;
 	private final BlockState[] blocks;
 	private final Point bottomRight;
-	private final PaddleState paddle;
+	private PaddleState paddle;
 	private Vector unormalizedD;
 
 	
@@ -116,7 +116,9 @@ public class BreakoutState {
 		Point value=getPaddle().getPosition().plus(new Vector(10,0));
 		Point tr= getPaddle().getPosition().plus(getPaddle().getSize());
 		if(tr.getX()<=50000) {
-			getPaddle().setPosition(value);}
+			paddle=paddle.getNewPosition(value);
+			//getPaddle().setPosition(value);
+			}
 	}
 	/**
 	 * moves paddle position according to velocity
@@ -127,7 +129,9 @@ public class BreakoutState {
 		Point value=getPaddle().getPosition().minus(new Vector(10,0));
 		Point tl= getPaddle().getPosition().minus(getPaddle().getSize());
 		if(tl.getX()>=0) {
-			getPaddle().setPosition(value);}
+			paddle= paddle.getNewPosition(value);
+			//getPaddle().setPosition(value);
+			}
 	}
 	/**
 	 * 

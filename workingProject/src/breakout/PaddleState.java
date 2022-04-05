@@ -27,13 +27,11 @@ public class PaddleState {
 	 */
 	private final Point position;
 	private final Vector size;
-	private Point position_copy;
 	
 	private PaddleState (Point position, Vector size){
 		this.position=position;
 		this.size=size;
 		
-		this.position_copy=this.position;
 	};
 	
 	//Factory method
@@ -59,7 +57,7 @@ public class PaddleState {
 	 * 
 	 */
 	public Point  getPosition() {
-		return new Point(this.position_copy.getX(),this.position_copy.getY());
+		return new Point(this.position.getX(),this.position.getY());
 	};
 	/**
 	 * @inspects | this
@@ -70,14 +68,12 @@ public class PaddleState {
 	}
 	
 	/**
+	 * 
 	 * @pre | position != null
      * @pre | position.getX()>=0 && position.getY()>=0 && position.getX()<=30000 && position.getY()<=50000
-	 * @mutates mutates the copy of the central position of the paddle | getPosition()
-	 * @post | position.equals(getPosition())
-	 *
+	 * @post | result != null
 	 */
-	public void setPosition(Point position) {
-		this.position_copy=new Point(position.getX(),position.getY());
-
+	public PaddleState getNewPosition(Point position) {
+		return PaddleState.valueOf(new Point(position.getX(),position.getY()), size) ;
 	};
 }
