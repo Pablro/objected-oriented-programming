@@ -48,9 +48,9 @@ public class PaddleState {
 	 * 
 	 */
 	public static PaddleState valueOf (Point position, Vector size) {
-		Point position_copy=new Point(position.getX(),position.getY());
-		Vector size_copy=new Vector (size.getX(),size.getY());
-		return new PaddleState (position_copy,size_copy);
+		Point positionCopy=new Point(position.getX(),position.getY());
+		Vector sizeCopy=new Vector (size.getX(),size.getY());
+		return new PaddleState (positionCopy,sizeCopy);
 	}
 	/**
 	 * @inspects | this
