@@ -252,8 +252,8 @@ public class BreakoutState {
 										ball.setVelocity(ball.getVelocity().mirrorOver(d));
 										//Based in the gui coordinates conversion. the point here is to set it to 0,0
 
-										block.setBlockBR(new Point(-250,-250));
-										block.setBlockTL(new Point(-250,-250));}
+										block=block.setBlockTLBR(new Point(-250,-250), new Point(-250,-250));
+										}
 
 						}
 						if(ballys>=blockyi && ballys<blockys && ballyi<blockyi) {
@@ -265,8 +265,7 @@ public class BreakoutState {
 								if(d.product(ball.getVelocity())>0) {
 									ball.setVelocity(ball.getVelocity().mirrorOver(d));
 									//Based in the gui coordinates conversion. the point here is to set it to 0,0
-									block.setBlockBR(new Point(-250,-250));
-									block.setBlockTL(new Point(-250,-250));}
+									block=block.setBlockTLBR(new Point(-250,-250), new Point(-250,-250));}
 								}
 								
 							}
@@ -291,8 +290,7 @@ public class BreakoutState {
 							if(d.product(ball.getVelocity())>0) {
 								ball.setVelocity(ball.getVelocity().mirrorOver(d));
 								//Based in the gui coordinates conversion. the point here is to set it to 0,0
-								block.setBlockBR(new Point(-250,-250));
-								block.setBlockTL(new Point(-250,-250));}
+								block=block.setBlockTLBR(new Point(-250,-250), new Point(-250,-250));}
 
 						}
 						if(ballxs>=blockxi && ballxs<blockxs && ballxi<blockxi) {
@@ -304,8 +302,7 @@ public class BreakoutState {
 							if(d.product(ball.getVelocity())>0) {
 							ball.setVelocity(ball.getVelocity().mirrorOver(d));
 							//Based in the gui coordinates conversion. the point here is to set it to 0,0
-							block.setBlockBR(new Point(-250,-250));
-							block.setBlockTL(new Point(-250,-250));}
+							block=block.setBlockTLBR(new Point(-250,-250), new Point(-250,-250));}
 							}
 								
 					}
