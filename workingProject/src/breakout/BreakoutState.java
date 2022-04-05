@@ -46,6 +46,7 @@ public class BreakoutState {
 		 *
 		 *
 		 */
+	// Defensive programming?
 	public BreakoutState(BallState[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
 
 		this.paddle=paddle;

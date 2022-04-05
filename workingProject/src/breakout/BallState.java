@@ -99,6 +99,7 @@ public class BallState {
 	 *@pre |position!=null
 	 *@mutates mutates the copy of the position|getCenter()
 	 *@post |position==getCenter()
+	 * Question: I feel we should use equals() here? 
 	 */
 	protected void setPosition(Point position) {
 		this.center_copy=position;
