@@ -53,9 +53,7 @@ public class BlockState {
 		this.blockTL=blockTL;
 		this.size=size;
 
-		//Is this passing value (content) or passing reference (address)?
-		//shall we do it in this way?
-		this.blockBR_copy=new Point(this.blockBR.getX(),this.blockBR.getY());
+		this.blockBR_copy=this.blockBR;
 		this.blockTL_copy=this.blockTL;
 		this.size_copy=this.size;
 		

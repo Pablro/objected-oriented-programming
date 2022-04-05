@@ -33,8 +33,7 @@ public class PaddleState {
 		this.position=position;
 		this.size=size;
 		
-		this.position_copy= new Point(this.position.getX(),this.position.getY());
-		//this.position_copy=this.position;
+		this.position_copy=this.position;
 	};
 	
 	//Factory method
