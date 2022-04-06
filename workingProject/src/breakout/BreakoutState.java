@@ -4,26 +4,17 @@ package breakout;
 
 // TODO: implement, document
 
-/**
- * 
- * @invar if their are null you have not initialize the BreakoutState correctly|getBalls()!=null
- * @invar if their are null you have not initialize the BreakoutState correctly|getBlocks()!=null
- * @invar if their are null you have not initialize the BreakoutState correctly|getPaddle()!=null
- * @invar if their are null you have not initialize the BreakoutState correctly|getBottomRight()!=null
- * 
- *
- */
 public class BreakoutState {
+	/*
+	 *I have fail to implement the enforcement of the balls and blocks @invar in the Breakoutstate, these are find in the respective classes
+	 */
 	/**
 	 *
 	 *@invar |balls!=null
 	 *@invar |blocks!=null
 	 *@invar |bottomRight!=null
 	 *@invar |paddle!=null
-	 *@invar paddle field enforcement| getPaddle().getPosition().getY()-getPaddle().getSize().getY()>=0 &&
-	 *		| getPaddle().getPosition().getY()+getPaddle().getSize().getY()<=getBottomRight().getY() &&
-	 *		| getPaddle().getPosition().getX()-getPaddle().getSize().getX()>=0 &&
-	 *		|getPaddle().getPosition().getX()+getPaddle().getSize().getX()<=getBottomRight().getX()
+	 *@invar Paddle enforcement in the gamefield| getPaddle().getPosition().getX()>=0 && getPaddle().getPosition().getY()>=0 && getPaddle().getPosition().getX()<=50000 && getPaddle().getPosition().getY()<=30000
 	 *@representationObject
 	 */
 	private BallState[] balls;
@@ -35,19 +26,18 @@ public class BreakoutState {
 	
 		/**
 		 * 
-		 *@pre |balls!=null
-		 *@pre |blocks!=null
-		 *@pre |bottomRight!=null
-		 *@pre	|paddle!=null
+		 *@throws|balls==null
+		 *@throws |blocks==null
+		 *@throws |bottomRight==null
+		 *@throws |paddle!=null
 		 *@mutates |this
-		 *@post |getPaddle().equals(paddle)
 		 *@post |getBottomRight().equals(bottomRight)
-		 *
-		 *
-		 *
+		 *@post |getPaddle().equals(paddle)
 		 */
-	// Defensive programming?
 	public BreakoutState(BallState[] balls, BlockState[] blocks, Point bottomRight, PaddleState paddle) {
+		if (balls==null||blocks==null||bottomRight==null||paddle==null) {
+			throw new IllegalArgumentException("invalid argument");
+		}
 
 		this.paddle=paddle;
 		this.balls=balls;
@@ -79,8 +69,7 @@ public class BreakoutState {
 	 * @inspects
 	 */
 	public PaddleState getPaddle() {
-		PaddleState paddleCopy= PaddleState.valueOf(paddle.getPosition(),paddle.getSize());
-		return paddleCopy;
+		return paddle;
 	}
 	/**
 	 * 
@@ -90,6 +79,7 @@ public class BreakoutState {
 		return bottomRight;
 	}
 	/**
+	 * @inspects |this
 	 *@pre |paddleDir==1 || paddleDir==-1 || paddleDir==0 
 	 *
 	 */
@@ -108,6 +98,7 @@ public class BreakoutState {
 		
 		
 	/**
+	 * @inspects|this
 	 *moves paddle position according to velocity
 	 *@post |getPaddle().getPosition().equals(old(getPaddle().getPosition().plus(new Vector(10,0)))) || 
 	 *		|getPaddle().getPosition().equals(old(getPaddle().getPosition()))
@@ -118,10 +109,11 @@ public class BreakoutState {
 		Point tr= getPaddle().getPosition().plus(getPaddle().getSize());
 		if(tr.getX()<=50000) {
 			paddle=paddle.getNewPosition(value);
-			//getPaddle().setPosition(value);
+
 			}
 	}
 	/**
+	 * @inspects |this
 	 * moves paddle position according to velocity
 	 *@post |getPaddle().getPosition().equals(old(getPaddle().getPosition().minus(new Vector(10,0)))) || 
 	 *		|getPaddle().getPosition().equals(old(getPaddle().getPosition()))
@@ -131,7 +123,7 @@ public class BreakoutState {
 		Point tl= getPaddle().getPosition().minus(getPaddle().getSize());
 		if(tl.getX()>=0) {
 			paddle=paddle.getNewPosition(value);
-			//getPaddle().setPosition(value);
+
 			}
 	}
 	/**
@@ -195,8 +187,7 @@ public class BreakoutState {
 		int padxs=paddleCoordinates(paddle)[2];
 		int padxi=paddleCoordinates(paddle)[3];
 		//the unit change (+7) is randomly select for increasing the speed of the game
-		//because the for loops can make the graphics go terrible slow (I am sorry for this)
-		//better idea to detect collision are welcome
+		//because the for loops can make the graphics go terrible slow.
 		 for (int bposition=ballxi;bposition<=ballxs;bposition+=7) {
 			 for (int padposition=padxi;padposition<=padxs;padposition+=7) {
 				 if(bposition==padposition) {
@@ -266,7 +257,7 @@ public class BreakoutState {
 								 */
 								if(d.product(ball.getVelocity())>0) {
 									ball=ball.getNewVelocity(ball.getVelocity().mirrorOver(d));
-									//Based in the gui coordinates conversion. the point here is to set it to 0,0
+									//Based in the gui coordinates conversion.The objective is to set it (0,0)
 									blocks[i]=blocks[i].setBlockTLBR(new Point(-250,-250), new Point(-250,-250));
 									}
 								}
@@ -279,7 +270,7 @@ public class BreakoutState {
 			//Face Left_right of the block collision
 			//the unit change (+10) is randomly select for increasing the speed of the game
 			//because the for loops can make the graphics go terribly slow
-			//same principle for this case the sensitivity and the program performance work well at this unit change in the for loops
+			//same principle, for this case the sensitivity and the program performance work well at this unit change in the for loops
 			for(int ballposition=ballyi;ballposition<=ballys;ballposition+=7) {
 				for(int blockposition=blockyi;blockposition<=blockys;blockposition+=8) {
 					
@@ -292,8 +283,8 @@ public class BreakoutState {
 							 */
 							if(d.product(ball.getVelocity())>0) {
 								ball=ball.getNewVelocity(ball.getVelocity().mirrorOver(d));
-								//Based in the gui coordinates conversion. the point here is to set it to 0,0
-								//block.setBlockTLBR(new Point(-250,-250), new Point(-250,-250));
+								//Based in the gui coordinates conversion.The objective is to set it (0,0)
+								blocks[i]=blocks[i].setBlockTLBR(new Point(-250,-250), new Point(-250,-250));
 									}
 
 						}
@@ -305,8 +296,8 @@ public class BreakoutState {
 							 */
 							if(d.product(ball.getVelocity())>0) {
 							ball=ball.getNewVelocity(ball.getVelocity().mirrorOver(d));
-							//Based in the gui coordinates conversion. the point here is to set it to 0,0
-							//block.setBlockTLBR(new Point(-250,-250), new Point(-250,-250));
+							//Based in the gui coordinates conversion.The objective is to set it (0,0)
+							blocks[i]=blocks[i].setBlockTLBR(new Point(-250,-250), new Point(-250,-250));
 								}
 							}
 								
@@ -341,13 +332,13 @@ public class BreakoutState {
 					if(ballyi<=wallys && ballyi>wallyi && ballys>wallys) {
 								ball=ball.getNewPosition(new Point(-250,-250));
 								ball=ball.getNewSize(new Vector(0,0));
-								//look at gui coordinates conversion. the point here is to set it to 0,0
+								//Based in the gui coordinates conversion.The objective is to set it (0,0)
 
 
 					}
 					if(ballys>=wallyi && ballys<wallys && ballyi<wallyi) {
 							
-						//Based in the gui coordinates conversion. the point here is to set it to 0,0
+						//Based in the gui coordinates conversion.The objective is to set it (0,0)
 						Vector d= findingD(ball,ballposition,ballys);
 						ball=ball.getNewVelocity(ball.getVelocity().mirrorOver(d));
 							
@@ -363,14 +354,14 @@ public class BreakoutState {
 					if(ballxi<=wallxs && ballxi>wallxi && ballxs>wallxs) {
 						Vector d= findingD(ball,ballxi,ballposition);
 						ball=ball.getNewVelocity(ball.getVelocity().mirrorOver(d));
-						//Based in the gui coordinates conversion. the point here is to set it to 0,0
+						//Based in the gui coordinates conversion.The objective is to set it (0,0)
 
 
 					}
 					if(ballxs>=wallxi && ballxs<wallxs && ballxi<wallxi) {
 						Vector d= findingD(ball,ballxs,ballposition);
 						ball=ball.getNewVelocity(ball.getVelocity().mirrorOver(d));
-						//Based in the gui coordinates conversion. the point here is to set it to 0,0
+						//Based in the gui coordinates conversion.The objective is to set it (0,0)
 						}
 							
 				}
@@ -381,13 +372,13 @@ public class BreakoutState {
 	return ball;
 	}
 	/*
-	 * 	 * These are collision coordinates taken from TL, TR, BL, BR of each rectange.
-	 * They are used to establish a set of points in between where a collision can happen
+	 * 	 * These are the collision coordinates taken from TL, TR, BL, BR of each rectangle.
+	 * They are used to establish a set of points where in between a collision can happen.
 	 */
 	/**
 
 	 * 
-	 * @pre Enforce balls in the field| (ball.getCenter().getY()-ball.getSize().getY()>=0 &&
+	 * @pre Enforce balls in the field not as {@invar}| (ball.getCenter().getY()-ball.getSize().getY()>=0 &&
 	 *		| ball.getCenter().getY()+ball.getSize().getY()<=getBottomRight().getY() &&
 	 *		| ball.getCenter().getX()-ball.getSize().getX()>=0 &&
 	 *		|ball.getCenter().getX()+ball.getSize().getX()<=getBottomRight().getX()) ||
@@ -410,8 +401,8 @@ public class BreakoutState {
 		return ballcoordinates;
 	}
 	/*
-	 * 	These are collision coordinates taken from TL, TR, BL, BR of each rectange.
-	 * They are used to establish a set of points in between where a collision can happen
+	 * 	These are collision coordinates taken from TL, TR, BL, BR of each rectangle.
+	 * They are used to establish a set of points where in between a collision can happen
 	 */
 	/**
 
@@ -431,11 +422,11 @@ public class BreakoutState {
 		return wallcoordinates;
 	}
 	/*
-	 * These are collision coordinates taken from TL, TR, BL, BR of each rectange.
-	 * They are used to establish a set of points in between where a collision can happen
+	 * These are collision coordinates taken from TL, TR, BL, BR of each rectangle.
+	 * They are used to establish a set of points where in between a collision can happen
 	 */
 	/**
-	 * @pre Enforce blocks in the field| (block.getBlockTL().getY()>=0 &&
+	 * @pre Enforce blocks in the field not as {@invar}| (block.getBlockTL().getY()>=0 &&
 	 *		| block.getBlockBR().getY()<=getBottomRight().getY() &&
 	 *		| block.getBlockTL().getX()>=0 &&
 	 *		|block.getBlockBR().getX()<=getBottomRight().getX()) ||
@@ -459,10 +450,11 @@ public class BreakoutState {
 		return blockcoordinates;
 	}
 	/*
-	 * These are collision coordinates taken from TL, TR, BL, BR of each rectange.
-	 * They are used to establish a set of points in between where a collision can happen
+	 * These are collision coordinates taken from TL, TR, BL, BR of each rectangle.
+	 * They are used to establish a set of points where in between a collision can happen
 	 */
 	/**
+	 * 
 	 *@pre |paddle!=null
 	 *@creates |result
 	 *@post| result!=null
@@ -484,7 +476,7 @@ public class BreakoutState {
 	 * 
 	 * @pre |ball!=null
 	 * @creates |result
-	 * @mutates |this.unormalizedD
+	 * @mutates |this
 	 * @post |getUnormalizedD().equals(new Vector(crossx-ball.getCenter().getX(),crossy-ball.getCenter().getY()))
 	 */
 	private void Unormalized(BallState ball, int crossx, int crossy) {

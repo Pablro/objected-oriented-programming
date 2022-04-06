@@ -1,28 +1,16 @@
 package breakout;
 
 /**
- * Each instance of this class represents a paddle defined by its central position and size.
- * 
+
  * @immutable
- * 
- * Abstract state invariants
- * 
- * @invar | getPosition() !=null
- * @invar | getSize() !=null
- * @invar | getPosition().getX()>=0 && getPosition().getY()>=0 && getPosition().getX()<=30000 && getPosition().getY()<=50000
-	
- * 
+ 
  */
 public class PaddleState {
 	// TODO: implement
-	//DONE-check it
 	/**
-	 * Representation state invariants
 	 * 
 	 * @invar | position != null
 	 * @invar | size != null
-	 * @invar | position.getX()>=0 && position.getY()>=0 && position.getX()<=30000 && position.getY()<=50000
-	 * 
 	 * @representationObject
 	 */
 	private final Point position;
@@ -35,14 +23,12 @@ public class PaddleState {
 	};
 	
 	//Factory method
-	
 	/**
-	 * Returns a paddle object defined by its central position and size.
-	 * 
+	 * Returns a paddle with central position and a predefined size
 	 * @pre | position != null
 	 * @pre | size != null
-	 * @pre | size.getX() > 0 && size.getY() > 0
-	 * @pre | position.getX()>=0 && position.getY()>=0 && position.getX()<=30000 && position.getY()<=50000
+	 * @pre |position.getX()>=0 && position.getY()>=0 && position.getX()<=50000 && position.getY()<=30000
+	 * @pre |size.equals(new Vector(50000/10/2,30000/9/2))
 	 * @creates |result
 	 * @post | result != null
 	 * @post | result.getPosition().equals(position) && result.getSize().equals(size)
@@ -70,12 +56,10 @@ public class PaddleState {
 	
 	/**
 	 * 
-	 * @pre | position != null
-     * @pre | position.getX()>=0 && position.getY()>=0 && position.getX()<=30000 && position.getY()<=50000
-	 * @post | result != null
-	 * @post | result.getPosition().equals(position)
+	 * @pre |position!=null
+	 * @post |result.getPosition().equals(position)
 	 */
 	public PaddleState getNewPosition(Point position) {
-		return PaddleState.valueOf(new Point(position.getX(),position.getY()), size) ;
+		return PaddleState.valueOf(new Point(position.getX(),position.getY()), getSize()) ;
 	};
 }

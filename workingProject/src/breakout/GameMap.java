@@ -18,14 +18,12 @@ public class GameMap {
 		Point blockTL = topLeft.plus(marginBL);
 		Point blockBR = blockTL.plus(size);
 		// TODO: return a block with given top left (`blockTL`) and bottom right (`blockBR`) Point 
-		//DONE-check it
 		return BlockState.valueOf(blockTL,blockBR,size);
 	}
 	private static PaddleState createPaddle(Point topLeft) {
 		Vector size = new Vector(WIDTH/BLOCK_COLUMNS/2,HEIGHT/BLOCK_LINES/2);
 		Point center = topLeft.plus(size);
 		// TODO: return a paddle with given center 
-		//DONE-check it
 		return PaddleState.valueOf(center,size);
 	}
 	private static BallState createBall(Point topLeft) {
@@ -33,7 +31,6 @@ public class GameMap {
 		Point center = topLeft.plus(centerD);
 		int diameter = INIT_BALL_DIAMETER;
 		// TODO: return a ball with given `center`, `diameter` and initial velocity `INIT_BALL_VELOCITY`
-		//DONE-check it
 		return BallState.valueOfA(center,diameter,INIT_BALL_VELOCITY);
 	}
 		
