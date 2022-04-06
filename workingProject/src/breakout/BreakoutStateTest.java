@@ -38,7 +38,7 @@ class BreakoutStateTest {
 		for (int i=0; i<300;i++) {
 			exposingSetters.tick(1);
 			if(i==299) {
-				exposingSetters.getBalls()[0].setVelocity(new Vector(3,-3));
+				exposingSetters.getBalls()[0].getNewVelocity(new Vector(3,-3));
 			}
 		}
 		assertEquals(new Point(24000,17098),exposingSetters.getBalls()[0].getCenter());
@@ -57,7 +57,7 @@ class BreakoutStateTest {
 			exposingSetters.tick(1);
 			if(i==299) {
 				assertEquals(new Point(24000,17098),exposingSetters.getBalls()[0].getCenter());
-				exposingSetters.getBalls()[0].setVelocity(new Vector(3,-3));
+				exposingSetters.getBalls()[0].getNewVelocity(new Vector(3,-3));
 			}
 			if(i==300) {
 				assertEquals(new Point(24003,17095),exposingSetters.getBalls()[0].getCenter());
@@ -79,7 +79,7 @@ class BreakoutStateTest {
 			if(i==299) {
 				//update this value
 				assertEquals(new Point(24000,17098),exposingSetters.getBalls()[0].getCenter());
-				exposingSetters.getBalls()[0].setVelocity(new Vector(60000,30000));
+				exposingSetters.getBalls()[0].getNewVelocity(new Vector(60000,30000));
 			}
 			if(i==300) {
 				assertEquals(new Point(24003,17095),exposingSetters.getBalls()[0].getCenter());

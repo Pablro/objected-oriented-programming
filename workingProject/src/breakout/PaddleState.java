@@ -27,14 +27,11 @@ public class PaddleState {
 	 */
 	private final Point position;
 	private final Vector size;
-	private Point position_copy;
 	
 	private PaddleState (Point position, Vector size){
 		this.position=position;
 		this.size=size;
 		
-		this.position_copy= new Point(this.position.getX(),this.position.getY());
-		//this.position_copy=this.position;
 	};
 	
 	//Factory method
@@ -46,21 +43,22 @@ public class PaddleState {
 	 * @pre | size != null
 	 * @pre | size.getX() > 0 && size.getY() > 0
 	 * @pre | position.getX()>=0 && position.getY()>=0 && position.getX()<=30000 && position.getY()<=50000
+	 * @creates |result
 	 * @post | result != null
 	 * @post | result.getPosition().equals(position) && result.getSize().equals(size)
 	 * 
 	 */
 	public static PaddleState valueOf (Point position, Vector size) {
-		Point position_copy=new Point(position.getX(),position.getY());
-		Vector size_copy=new Vector (size.getX(),size.getY());
-		return new PaddleState (position_copy,size_copy);
+		Point positionCopy=new Point(position.getX(),position.getY());
+		Vector sizeCopy=new Vector (size.getX(),size.getY());
+		return new PaddleState (positionCopy,sizeCopy);
 	}
 	/**
 	 * @inspects | this
 	 * 
 	 */
 	public Point  getPosition() {
-		return new Point(this.position_copy.getX(),this.position_copy.getY());
+		return new Point(this.position.getX(),this.position.getY());
 	};
 	/**
 	 * @inspects | this
@@ -71,14 +69,13 @@ public class PaddleState {
 	}
 	
 	/**
+	 * 
 	 * @pre | position != null
      * @pre | position.getX()>=0 && position.getY()>=0 && position.getX()<=30000 && position.getY()<=50000
-	 * @mutates mutates the copy of the central position of the paddle | getPosition()
-	 * @post | position.equals(getPosition())
-	 *
+	 * @post | result != null
+	 * @post | result.getPosition().equals(position)
 	 */
-	public void setPosition(Point position) {
-		this.position_copy=new Point(position.getX(),position.getY());
-
+	public PaddleState getNewPosition(Point position) {
+		return PaddleState.valueOf(new Point(position.getX(),position.getY()), size) ;
 	};
 }
