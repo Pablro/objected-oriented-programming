@@ -13,7 +13,7 @@ public class BlockState {
 	 * @invar | blockTL != null
 	 * @invar | blockBR != null
 	 * @invar |size.equals(new Vector(50000/10-70,30000/9-70))
-	 * @invar | ((blockBR.getX()<50000 && blockBR.getY()<30000)&&(blockTL.getX()<50000 && blockTL.getY()<30000)&& (blockTL.getY()>0 && blockTL.getX()>0)&& (blockBR.getY()>0 && blockBR.getX()>0))||(blockTL.equals(new Point(-250,-250))&&blockBR.equals(new Point(-250,-250)))
+	 * @invar | ((blockBR.getX()<50000 && blockBR.getY()<30000)&&(blockTL.getX()<50000 && blockTL.getY()<30000)&& (blockTL.getY()>0 && blockTL.getX()>0)&& (blockBR.getY()>0 && blockBR.getX()>0))
 	 * @representationObject
 	 * 
 	 */
