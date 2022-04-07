@@ -1,0 +1,15 @@
+I implemented the bounce of the ball with:
+-paddle
+-blocks with removal of the graphics (not object deletion: reset of TL and BR points in order to make toGUIcoord method convert this point to 0 arguments)
+I set the calculations for determining the vector d for the MirrorOver Method
+I add to setter methods to the BlockState class to be able reset the values for the block deletion
+
+Things as long as I know that are missing:
+implemented collision with walls
+verify winning and loosing conditions
+check the physics specified in toledo
+implement the variable paddleDir 
+-documentation and Junittest
+-restructure the code for easy reading and check logic and complete functionality.
+
+NOTE: LET ME KNOW IF I MISS SOMETHING
