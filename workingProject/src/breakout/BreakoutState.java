@@ -11,9 +11,8 @@ public class BreakoutState {
 	 *@invar |bottomRight!=null
 	 *@invar |paddle!=null
 	 *@invar Paddle enforcement in the gamefield| paddle.getPosition().getX()>=0 && paddle.getPosition().getY()>=0 && paddle.getPosition().getX()<=50000 && paddle.getPosition().getY()<=30000
-	 *@invar Paddle enforcement in the gamefield| paddle.getPosition().getX()>=0 && paddle.getPosition().getY()>=0 && paddle.getPosition().getX()<=50000 && paddle.getPosition().getY()<=30000
-	 *@invar |list.stream(balls).allMatch(e -> (e.getCenter().getX()<50000 && e.getCenter.getX()>0)&& e.getCenter.getY()<30000 && e.getCenter.getY()>0)
-	 *@invar |list.stream(blocks).allMatch (e -> ((e.getBlockBR().getX()<50000 && e.getBlockBR().getY()<30000)&&(e.getBlockTL().getX()<50000 && e.getBlockTL().getY()<30000)&& (e.getBlockTL().getY()>0 && e.getBlockTL().getX()>0)&& (e.getBlockBR().getY()>0 && e.getBlockBR().getX()>0)))
+	 *@invar Ball enforcement in the game field|list.stream(balls).allMatch(e -> (e.getCenter().getX()<50000 && e.getCenter.getX()>0)&& e.getCenter.getY()<30000 && e.getCenter.getY()>0)
+	 *@invar block enforcement in the game field|list.stream(blocks).allMatch (e -> ((e.getBlockBR().getX()<50000 && e.getBlockBR().getY()<30000)&&(e.getBlockTL().getX()<50000 && e.getBlockTL().getY()<30000)&& (e.getBlockTL().getY()>0 && e.getBlockTL().getX()>0)&& (e.getBlockBR().getY()>0 && e.getBlockBR().getX()>0)))
 	)
 	 *@representationObject
 	 */
@@ -335,10 +334,8 @@ public class BreakoutState {
 						//Vector d= findingD(ball,ballposition,ballyi);
 						Vector d= new Vector(0,1);
 						balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));
-
-						
 						break;
-								//Based in the gui coordinates conversion.The objective is to set it (0,0)
+
 
 								
 					}
@@ -359,15 +356,15 @@ public class BreakoutState {
 						Vector d= new Vector(1,0);
 						balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));
 						break;
-						//Based in the gui coordinates conversion.The objective is to set it (0,0)
+						
 
 
 					}
 					if(ballxs>=wallxs && ballxi<wallxs && ballxi>wallxi) {
 						Vector d=new Vector(1,0);
+						//Vector d= findingD(ball,ballxs,ballposition);
 						balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));
 						break;
-						//Based in the gui coordinates conversion.The objective is to set it (0,0)
 						}
 							
 				}

@@ -11,7 +11,6 @@ public class BallState {
 	 * @invar |velocity!=null
 	 * @invar |size!=null
 	 * @invar put some constraints to the field coordinates of the ball|size.equals(new Vector(700/2,700/2))
-	 * @invar |(center.getX()<50000 && center.getX()>0)&& center.getY()<30000 && center.getY()>0
 	 * @representationObject
 	 * */
 	private final  Point center;
