@@ -14,6 +14,9 @@ public class BreakoutState {
 	 *@invar |bottomRight!=null
 	 *@invar |paddle!=null
 	 *@invar Paddle enforcement in the gamefield| paddle.getPosition().getX()>=0 && paddle.getPosition().getY()>=0 && paddle.getPosition().getX()<=50000 && paddle.getPosition().getY()<=30000
+	 *@invar | list.stream(balls).allMatch(e -> (e.getCenter().getX()<50000 && e.getCenter.getX()>0)&& e.getCenter.getY()<30000 && e.getCenter.getY()>0)
+	 *@invar | list.stream(blocks).allMatch (e -> ((e.getBlockBR().getX()<50000 && e.getBlockBR().getY()<30000)&&(e.getBlockTL().getX()<50000 && e.getBlockTL().getY()<30000)&& (e.getBlockTL().getY()>0 && e.getBlockTL().getX()>0)&& (e.getBlockBR().getY()>0 && e.getBlockBR().getX()>0)))
+	)
 	 *@representationObject
 	 */
 	private ArrayList <BallState> balls=new ArrayList <BallState>();
@@ -371,7 +374,6 @@ public class BreakoutState {
 	 *		| ball.getCenter().getY()+ball.getSize().getY()<=getBottomRight().getY() &&
 	 *		| ball.getCenter().getX()-ball.getSize().getX()>=0 &&
 	 *		|ball.getCenter().getX()+ball.getSize().getX()<=getBottomRight().getX()) ||
-	 *		|ball.getCenter().equals(new Point(-250,-250))
 	 * @pre |ball!=null
 	 *@creates |result
 	 *@post |result!=null
@@ -418,9 +420,7 @@ public class BreakoutState {
 	 * @pre Enforce blocks in the field not as {@invar}| (block.getBlockTL().getY()>=0 &&
 	 *		| block.getBlockBR().getY()<=getBottomRight().getY() &&
 	 *		| block.getBlockTL().getX()>=0 &&
-	 *		|block.getBlockBR().getX()<=getBottomRight().getX()) ||
-	 *		|(block.getBlockBR().equals(new Point(-250,-250)) &&
-	 *		|block.getBlockTL().equals(new Point(-250,-250)))
+	 *		|block.getBlockBR().getX()<=getBottomRight().getX()) 
 	 * @pre block!=null
 	 * @creates |result
 	 * @post |result!=null
