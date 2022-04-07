@@ -46,8 +46,6 @@ class BallStateTest {
 		ballState=ballState.getNewSize(new Vector(0,0));
 		assertEquals(new Vector(0,0),ballState.getSize());
 		ballState=ballState.getNewPosition(new Point(80,100));
-		assertEquals(new Point(80,100),ballState.getCenter());
-		ballState=ballState.getNewPosition(new Point(-250,-250));
-		assertEquals(new Point(-250,-250),ballState.getCenter());*/
+		assertEquals(new Point(80,100),ballState.getCenter());*/
 	}
 }

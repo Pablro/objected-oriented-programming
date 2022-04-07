@@ -42,9 +42,6 @@ class BlockStateTest {
 		assertEquals(size,myBlock10.getSize());
 		assertEquals(new Point(100,100),myBlock10.getBlockTL());
 		assertEquals(new Point(2100,2100),myBlock10.getBlockBR());
-		myBlock10=myBlock10.setBlockTLBR(new Point(-250,-250), new Point(-250,-250));
-		assertEquals(new Point(-250,-250),myBlock10.getBlockBR());
-		assertEquals(new Point(-250,-250),myBlock10.getBlockTL());
 		myBlock10=myBlock10.setBlockTLBR(new Point(200,200), new Point(2200,2200));
 		assertEquals(new Point(200,200),myBlock10.getBlockTL());
 		assertEquals(new Point(2200,2200),myBlock10.getBlockBR());
