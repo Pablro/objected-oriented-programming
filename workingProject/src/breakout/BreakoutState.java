@@ -308,6 +308,16 @@ public class BreakoutState {
 	 */
 
 	private void bounceWall(BallState ball,int ballindex) {	
+		/*
+		 * In the following code you will note that we replace the equation FindingD with a vector value (0,1) or (1,0)
+		 * the reasons behind this are the rounding effects caused by normalizing d.
+		 * We let this effects on the other blocks just to let you visualize the method  and its posible result considering the rounding values of 
+		 * (0,1),(1,0),(0,0),(1,1) which depending in the mirrorover efect this will affect the direction of the ball.
+		 * However in the wall this detection becomes really sensible because this roundings turns d into  (0,0) which means that
+		 * -2v*d will become 0 therefore the ball preserve the velocity magnitude and direction (impossible).
+		 * Hence we force this effects manually. It is pointless to mention that the physics effects of the ball even with dynamic equations are not accurately preserve because
+		 * this rounding effects to the normal vector.
+		 */
 		//Collision coordinates: for defining a range of possible bouncing points
 		int ballyi=ballCoordinates(ball)[0];
 		int ballys=ballCoordinates(ball)[1];
@@ -318,21 +328,22 @@ public class BreakoutState {
 		int wallyi=wallCoordinates()[2];
 		int wallys=wallCoordinates()[3];
 		for(int ballposition=ballxi;ballposition<=ballxs;ballposition+=5) {
-			for(int blockposition=wallxi;blockposition<=wallxs;blockposition+=5) {
-				if (ballposition==blockposition) {
-					if(ballyi<=wallys && ballyi>wallyi && ballys>wallys) {
-								balls.remove(ball);
-								break;
+			for(int wallposition=wallxi;wallposition<=wallxs;wallposition+=5) {
+				if (ballposition==wallposition) {
+					if(ballyi<=wallyi && ballys>wallyi && ballys<wallys) {
+						//Vector d= findingD(ball,ballposition,ballyi);
+						Vector d= new Vector(0,1);
+						balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));
+
+						
+						break;
 								//Based in the gui coordinates conversion.The objective is to set it (0,0)
 
-
+								
 					}
-					if(ballys>=wallyi && ballys<wallys && ballyi<wallyi) {
-							
-						//Based in the gui coordinates conversion.The objective is to set it (0,0)
-						Vector d= findingD(ball,ballposition,ballys);
-						balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));;
-							
+					if(ballys>=wallys && ballyi<wallys && ballyi>wallyi) {
+						balls.remove(ball);
+						break;	
 						}
 
 					}
@@ -342,16 +353,19 @@ public class BreakoutState {
 			for(int blockposition=wallyi;blockposition<=wallys;blockposition+=8) {
 				
 				if (ballposition==blockposition) {
-					if(ballxi<=wallxs && ballxi>wallxi && ballxs>wallxs) {
-						Vector d= findingD(ball,ballxi,ballposition);
+					if(ballxi<=wallxi && ballxs>wallxi && ballxs<wallxs) {
+						//Vector d= findingD(ball,ballxi,ballposition);
+						Vector d= new Vector(1,0);
 						balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));
+						break;
 						//Based in the gui coordinates conversion.The objective is to set it (0,0)
 
 
 					}
-					if(ballxs>=wallxi && ballxs<wallxs && ballxi<wallxi) {
-						Vector d= findingD(ball,ballxs,ballposition);
+					if(ballxs>=wallxs && ballxi<wallxs && ballxi>wallxi) {
+						Vector d=new Vector(1,0);
 						balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));
+						break;
 						//Based in the gui coordinates conversion.The objective is to set it (0,0)
 						}
 							
@@ -494,7 +508,7 @@ public class BreakoutState {
 	private Vector findingD(BallState ball,int crossx, int crossy) {
 		Unormalized(ball,crossx,crossy);
 		Vector unormalized=getUnormalizedD();
-		 Vector normalized=unormalized.scaledDiv((int)Math.sqrt(Math.pow(unormalized.getX(),2 )+Math.pow(unormalized.getY(), 2)));
+		Vector normalized=unormalized.scaledDiv((int)Math.sqrt(Math.pow(unormalized.getX(),2 )+Math.pow(unormalized.getY(), 2)));
 		return normalized;
 	}
 	
