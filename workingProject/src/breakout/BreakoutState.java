@@ -205,7 +205,7 @@ public class BreakoutState {
 	 * 
 	 */
 	private void bounceBlock(BallState ball,int ballindex) {
-		for (int i =0;i<blocks.size();i++) {
+		for (int i=0;i<blocks.size();i++) {
 			//Collision coordinates: for defining a range of possible bouncing points
 			BlockState block=blocks.get(i);
 			int ballyi=ballCoordinates(ball)[0];
@@ -232,7 +232,8 @@ public class BreakoutState {
 									if(d.product(ball.getVelocity())>0) {
 										balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));;
 										//Based in the gui coordinates conversion. the point here is to set it to 0,0									
-										blocks.remove(i);
+										blocks.remove(block);
+										break;
 										}
 
 						}
@@ -245,7 +246,8 @@ public class BreakoutState {
 								if(d.product(ball.getVelocity())>0) {
 									balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));;
 									//Based in the gui coordinates conversion.The objective is to set it (0,0)
-									blocks.remove(i);
+									blocks.remove(block);
+									break;
 									}
 								}
 								
@@ -271,7 +273,8 @@ public class BreakoutState {
 							if(d.product(ball.getVelocity())>0) {
 								balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));;
 								//Based in the gui coordinates conversion.The objective is to set it (0,0)
-								blocks.remove(i);
+								blocks.remove(block);
+								break;
 									}
 
 						}
@@ -284,7 +287,8 @@ public class BreakoutState {
 							if(d.product(ball.getVelocity())>0) {
 								balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));;
 							//Based in the gui coordinates conversion.The objective is to set it (0,0)
-							blocks.remove(i);
+							blocks.remove(block);
+							break;
 								}
 							}
 								
@@ -317,7 +321,8 @@ public class BreakoutState {
 			for(int blockposition=wallxi;blockposition<=wallxs;blockposition+=5) {
 				if (ballposition==blockposition) {
 					if(ballyi<=wallys && ballyi>wallyi && ballys>wallys) {
-								balls.remove(ballindex);
+								balls.remove(ball);
+								break;
 								//Based in the gui coordinates conversion.The objective is to set it (0,0)
 
 
