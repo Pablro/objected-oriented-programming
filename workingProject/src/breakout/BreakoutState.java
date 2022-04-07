@@ -1,12 +1,11 @@
 package breakout;
 
-
-
 // TODO: implement, document
+import java.util.ArrayList;
 
 public class BreakoutState {
 	/*
-	 *I have fail to implement the enforcement of the balls and blocks @invar in the Breakoutstate, these are find in the respective classes
+	 *We have fail to implement the enforcement of the balls and blocks @invar in the Breakoutstate, these are find in the respective classes
 	 */
 	/**
 	 *
@@ -14,11 +13,11 @@ public class BreakoutState {
 	 *@invar |blocks!=null
 	 *@invar |bottomRight!=null
 	 *@invar |paddle!=null
-	 *@invar Paddle enforcement in the gamefield| getPaddle().getPosition().getX()>=0 && getPaddle().getPosition().getY()>=0 && getPaddle().getPosition().getX()<=50000 && getPaddle().getPosition().getY()<=30000
+	 *@invar Paddle enforcement in the gamefield| paddle.getPosition().getX()>=0 && paddle.getPosition().getY()>=0 && paddle.getPosition().getX()<=50000 && paddle.getPosition().getY()<=30000
 	 *@representationObject
 	 */
-	private BallState[] balls;
-	private BlockState[] blocks;
+	private ArrayList <BallState> balls=new ArrayList <BallState>();
+	private ArrayList <BlockState> blocks= new ArrayList <BlockState>();
 	private final Point bottomRight;
 	private PaddleState paddle;
 	private Vector unormalizedD;
@@ -40,9 +39,14 @@ public class BreakoutState {
 		}
 
 		this.paddle=paddle;
-		this.balls=balls;
+		for(BallState ball:balls) {
+			this.balls.add(ball);
+		}
+		
 		this.bottomRight=bottomRight;
-		this.blocks=blocks;
+		for(BlockState block:blocks) {
+			this.blocks.add(block);
+		}
 
 	}
 
@@ -52,7 +56,7 @@ public class BreakoutState {
 	 * @inspects
 	 */
 	public BallState[] getBalls() {
-		
+		BallState[] balls=this.balls.toArray(new BallState[this.balls.size()]);
 		return balls.clone();
 	}
 	/**
@@ -61,7 +65,7 @@ public class BreakoutState {
 	 * @inspects
 	 */
 	public BlockState[] getBlocks() {
-		
+		BlockState[] blocks=this.blocks.toArray(new BlockState[this.blocks.size()]);
 		return blocks.clone();
 	}
 	/**
@@ -79,18 +83,18 @@ public class BreakoutState {
 		return bottomRight;
 	}
 	/**
-	 * @inspects |this
+	 * @mutates |this
 	 *@pre |paddleDir==1 || paddleDir==-1 || paddleDir==0 
 	 *
 	 */
 	
 	public void tick(int paddleDir) {
-		for (int i=0; i<balls.length;i++) {
-			balls[i]=bouncePaddle(balls[i],getPaddle(),paddleDir);
-			balls[i]=bounceBlock(balls[i],blocks);
-			Point positionAfter=balls[i].getCenter().plus(balls[i].getVelocity());
-			balls[i]=balls[i].getNewPosition(positionAfter);
-			balls[i]=bounceWall(balls[i]);
+		for (int i=0; i<balls.size();i++) {
+			bouncePaddle(balls.get(i),i,getPaddle(),paddleDir);
+			bounceBlock(balls.get(i),i);
+			Point positionAfter=balls.get(i).getCenter().plus(balls.get(i).getVelocity());
+			balls.set(i,balls.get(i).getNewPosition(positionAfter));
+			bounceWall(balls.get(i),i);
 			
 			
 		}
@@ -98,7 +102,7 @@ public class BreakoutState {
 		
 		
 	/**
-	 * @inspects|this
+	 * @mutates|this
 	 *moves paddle position according to velocity
 	 *@post |getPaddle().getPosition().equals(old(getPaddle().getPosition().plus(new Vector(10,0)))) || 
 	 *		|getPaddle().getPosition().equals(old(getPaddle().getPosition()))
@@ -113,7 +117,7 @@ public class BreakoutState {
 			}
 	}
 	/**
-	 * @inspects |this
+	 * @mutates |this
 	 * moves paddle position according to velocity
 	 *@post |getPaddle().getPosition().equals(old(getPaddle().getPosition().minus(new Vector(10,0)))) || 
 	 *		|getPaddle().getPosition().equals(old(getPaddle().getPosition()))
@@ -127,20 +131,12 @@ public class BreakoutState {
 			}
 	}
 	/**
-	 * 
+	 * @inspects |this
 	 * @post |result==true || result==false
 	 */
 	public boolean isWon() {
-		int emptyblocks=0;
 		boolean value=false;
-		for (BlockState block:getBlocks()) {
-			if (block.getBlockBR().equals(new Point(-250,-250))) {
-				if(block.getBlockTL().equals(new Point(-250,-250))) {
-					emptyblocks++;
-				}
-			}
-		}
-		if (emptyblocks==getBlocks().length) {
+		if(blocks.size()==0) {
 			value=true;
 		}
 		
@@ -148,19 +144,11 @@ public class BreakoutState {
 		return value;
 	}
 	/**
-	 *
+	 *@inspects |this
 	 *@post |result==true || result==false	 */
 	public boolean isDead() {
-		int emptyballs=0;
 		boolean value=false;
-		for (BallState ball:getBalls()) {
-			if(ball.getCenter().equals(new Point(-250,-250))) {
-				if(ball.getSize().equals(new Vector(0,0))) {
-					emptyballs++;
-				}
-			};
-		}
-		if(emptyballs==getBalls().length) {
+		if(balls.size()==0) {
 			value=true;
 		}
 
@@ -168,14 +156,14 @@ public class BreakoutState {
 		return value;
 	}
 	/**
-	 *
+	 *@mutates |this
 	 *@pre|paddleDir==1 || paddleDir==-1 || paddleDir==0 
 	 *@pre|ball!=null
 	 *@pre|paddle!=null
 	 *@post|ball.getVelocity()!=null
 	 * 
 	 */
-	private BallState bouncePaddle(BallState ball,PaddleState paddle, int paddleDir)
+	private void bouncePaddle(BallState ball,int ballindex,PaddleState paddle, int paddleDir)
 
 	{
 		//Collision coordinates: for defining a range of possible bouncing points
@@ -201,13 +189,12 @@ public class BreakoutState {
 						 if(d.product(ball.getVelocity())>0) {
 							 Vector withoutpaddlevector=ball.getVelocity().mirrorOver(d);
 							 //Additionally, the ball must speed up by one fifth of the current velocity of the paddle.
-							 ball=ball.getNewVelocity(withoutpaddlevector.plus(new Vector(paddle.getPosition().getX(),paddle.getPosition().getY()).scaled(paddleDir*1/5)));}
+							 balls.set(ballindex,ball.getNewVelocity(withoutpaddlevector.plus(new Vector(paddle.getPosition().getX(),paddle.getPosition().getY()).scaled(paddleDir*1/5))));}
 					 }
 					 
 				 }
 			 }
 		 }
-		return ball;
 	}
 	/**
 	 *
@@ -217,10 +204,10 @@ public class BreakoutState {
 	 *
 	 * 
 	 */
-	private BallState bounceBlock(BallState ball,BlockState[] blocks) {
-		for (int i =0;i<blocks.length;i++) {
+	private void bounceBlock(BallState ball,int ballindex) {
+		for (int i =0;i<blocks.size();i++) {
 			//Collision coordinates: for defining a range of possible bouncing points
-			BlockState block=blocks[i];
+			BlockState block=blocks.get(i);
 			int ballyi=ballCoordinates(ball)[0];
 			int ballys=ballCoordinates(ball)[1];
 			int ballxi=ballCoordinates(ball)[2];
@@ -243,9 +230,9 @@ public class BreakoutState {
 									 *  You can check this easily by verifying that the dot product of the two vectors (d . v) is positive.
 									 */
 									if(d.product(ball.getVelocity())>0) {
-										ball=ball.getNewVelocity(ball.getVelocity().mirrorOver(d));
+										balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));;
 										//Based in the gui coordinates conversion. the point here is to set it to 0,0									
-										blocks[i]=blocks[i].setBlockTLBR(new Point(-250,-250), new Point(-250,-250));
+										blocks.remove(i);
 										}
 
 						}
@@ -256,9 +243,9 @@ public class BreakoutState {
 								 *  You can check this easily by verifying that the dot product of the two vectors (d . v) is positive.
 								 */
 								if(d.product(ball.getVelocity())>0) {
-									ball=ball.getNewVelocity(ball.getVelocity().mirrorOver(d));
+									balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));;
 									//Based in the gui coordinates conversion.The objective is to set it (0,0)
-									blocks[i]=blocks[i].setBlockTLBR(new Point(-250,-250), new Point(-250,-250));
+									blocks.remove(i);
 									}
 								}
 								
@@ -282,9 +269,9 @@ public class BreakoutState {
 							 *  You can check this easily by verifying that the dot product of the two vectors (d . v) is positive.
 							 */
 							if(d.product(ball.getVelocity())>0) {
-								ball=ball.getNewVelocity(ball.getVelocity().mirrorOver(d));
+								balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));;
 								//Based in the gui coordinates conversion.The objective is to set it (0,0)
-								blocks[i]=blocks[i].setBlockTLBR(new Point(-250,-250), new Point(-250,-250));
+								blocks.remove(i);
 									}
 
 						}
@@ -295,9 +282,9 @@ public class BreakoutState {
 							 *  You can check this easily by verifying that the dot product of the two vectors (d . v) is positive.
 							 */
 							if(d.product(ball.getVelocity())>0) {
-							ball=ball.getNewVelocity(ball.getVelocity().mirrorOver(d));
+								balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));;
 							//Based in the gui coordinates conversion.The objective is to set it (0,0)
-							blocks[i]=blocks[i].setBlockTLBR(new Point(-250,-250), new Point(-250,-250));
+							blocks.remove(i);
 								}
 							}
 								
@@ -308,15 +295,15 @@ public class BreakoutState {
 
 			
 		}
-		return ball;
 	}
 	/**
 	 *
 	 * @pre |ball!=null
+	 * @pre |ballindex>=0 && ballindex<balls.size()
 	 *@post |ball.getVelocity()!=null
 	 */
 
-	private BallState bounceWall(BallState ball) {	
+	private void bounceWall(BallState ball,int ballindex) {	
 		//Collision coordinates: for defining a range of possible bouncing points
 		int ballyi=ballCoordinates(ball)[0];
 		int ballys=ballCoordinates(ball)[1];
@@ -330,8 +317,7 @@ public class BreakoutState {
 			for(int blockposition=wallxi;blockposition<=wallxs;blockposition+=5) {
 				if (ballposition==blockposition) {
 					if(ballyi<=wallys && ballyi>wallyi && ballys>wallys) {
-								ball=ball.getNewPosition(new Point(-250,-250));
-								ball=ball.getNewSize(new Vector(0,0));
+								balls.remove(ballindex);
 								//Based in the gui coordinates conversion.The objective is to set it (0,0)
 
 
@@ -340,7 +326,7 @@ public class BreakoutState {
 							
 						//Based in the gui coordinates conversion.The objective is to set it (0,0)
 						Vector d= findingD(ball,ballposition,ballys);
-						ball=ball.getNewVelocity(ball.getVelocity().mirrorOver(d));
+						balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));;
 							
 						}
 
@@ -353,14 +339,14 @@ public class BreakoutState {
 				if (ballposition==blockposition) {
 					if(ballxi<=wallxs && ballxi>wallxi && ballxs>wallxs) {
 						Vector d= findingD(ball,ballxi,ballposition);
-						ball=ball.getNewVelocity(ball.getVelocity().mirrorOver(d));
+						balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));
 						//Based in the gui coordinates conversion.The objective is to set it (0,0)
 
 
 					}
 					if(ballxs>=wallxi && ballxs<wallxs && ballxi<wallxi) {
 						Vector d= findingD(ball,ballxs,ballposition);
-						ball=ball.getNewVelocity(ball.getVelocity().mirrorOver(d));
+						balls.set(ballindex, balls.get(ballindex).getNewVelocity(ball.getVelocity().mirrorOver(d)));
 						//Based in the gui coordinates conversion.The objective is to set it (0,0)
 						}
 							
@@ -368,8 +354,6 @@ public class BreakoutState {
 
 			}
 		}
-		
-	return ball;
 	}
 	/*
 	 * 	 * These are the collision coordinates taken from TL, TR, BL, BR of each rectangle.

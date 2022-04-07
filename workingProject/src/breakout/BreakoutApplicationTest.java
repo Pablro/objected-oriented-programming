@@ -1,4 +1,4 @@
-package breakout.gui;
+package breakout;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,9 +7,6 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 
 import org.junit.jupiter.api.Test;
-
-import breakout.BreakoutState;
-import breakout.GameMap;
 
 class BreakoutApplicationTest {
 	public static final String initMap = """

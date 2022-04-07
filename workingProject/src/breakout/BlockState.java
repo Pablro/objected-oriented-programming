@@ -1,7 +1,5 @@
 package breakout;
 
-
-
 /**
  * @immutable
  */
@@ -41,7 +39,7 @@ public class BlockState {
 	 * @pre | blockBR != null
 	 * @pre | size != null
 	 * @pre |size.equals(new Vector(50000/10-70,30000/9-70))
-	 * @pre |((blockBR.getX()<50000 && blockBR.getY()<30000)&&(blockTL.getX()<50000 && blockTL.getY()<30000)&& (blockTL.getY()>0 && blockTL.getX()>0)&& (blockBR.getY()>0 && blockBR.getX()>0))||(blockTL.equals(new Point(-250,-250))&&blockBR.equals(new Point(-250,-250)))
+	 * @pre |((blockBR.getX()<50000 && blockBR.getY()<30000)&&(blockTL.getX()<50000 && blockTL.getY()<30000)&& (blockTL.getY()>0 && blockTL.getX()>0)&& (blockBR.getY()>0 && blockBR.getX()>0))
 	 * @creates |result
 	 * @post | result != null
 	 * @post | result.getBlockTL().equals(blockTL) && result.getBlockBR().equals(blockBR) && result.getSize().equals(size)
@@ -89,20 +87,4 @@ public class BlockState {
 
 		return blockBR;
 	}
-	/**
-	 * @pre |TL!=null
-	 * @pre |BR!=null
-	 * @pre |((TL.getX()<50000 && BR.getY()<30000)&&(TL.getX()<50000 && TL.getY()<30000)&& (TL.getY()>0 && TL.getX()>0)&& (BR.getY()>0 && BR.getX()>0))||(TL.equals(new Point(-250,-250))&&BR.equals(new Point(-250,-250)))
-	 *@post |result.getBlockTL().equals(TL)
-	 *@post |result.getBlockBR().equals(BR) 
-	 * 
-	 */
-	public BlockState setBlockTLBR(Point TL, Point BR) {
-		Point TLCopy=new Point(TL.getX(),TL.getY());
-		Point BRCopy=new Point(BR.getX(),BR.getY());
-		return BlockState.valueOf(TLCopy, BRCopy, getSize());
-	}
-	
-	
-
 }

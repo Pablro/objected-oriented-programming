@@ -1,10 +1,7 @@
-package breakout.gui;
+package breakout;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
-
-import breakout.BreakoutState;
-import breakout.GameMap;
 
 public class BreakoutApplication {
 

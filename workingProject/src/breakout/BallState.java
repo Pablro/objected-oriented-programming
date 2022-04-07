@@ -10,8 +10,8 @@ public class BallState {
 	 * @invar |center!=null
 	 * @invar |velocity!=null
 	 * @invar |size!=null
-	 * @invar put some constraints to the field coordinates of the ball|size.equals(new Vector(700/2,700/2))|| size.equals(new Vector(0,0))
-	 * @invar |(center.getX()<50000 && center.getX()>0)&& center.getY()<30000 && center.getY()>0||center.equals(new Point(-250,-250))
+	 * @invar put some constraints to the field coordinates of the ball|size.equals(new Vector(700/2,700/2))
+	 * @invar |(center.getX()<50000 && center.getX()>0)&& center.getY()<30000 && center.getY()>0
 	 * @representationObject
 	 * */
 	private final  Point center;
@@ -22,8 +22,8 @@ public class BallState {
 	 * @pre |center!=null
 	 * @pre |velocity!=null
 	 * @pre |size!=null
-	 * @pre initial diameter from GameMap class|(size.equals(new Vector(700/2,700/2)))||size.equals(new Vector(0,0))
-	 * @pre initial center from GameMap class|(center.getX()<50000 && center.getX()>0&& center.getY()<30000 && center.getY()>0) || center.equals(new Point(-250,-250))
+	 * @pre initial diameter from GameMap class|(size.equals(new Vector(700/2,700/2)))
+	 * @pre initial center from GameMap class|(center.getX()<50000 && center.getX()>0&& center.getY()<30000 && center.getY()>0) 
 	 * @mutates just once for initializing|this
 	 * @post |getCenter().equals(center)
 	 * @post |getVelocity().equals(velocity)
@@ -60,10 +60,10 @@ public class BallState {
 	//Factory Method
 	/**
 	 * Returns a ball with a given bounce velocity, modifiable size(in case of low wall) and dynamic position. 
-	 * @pre |(size.equals(new Vector(700/2,700/2)))||(size.equals(new Vector(0,0)))
+	 * @pre |(size.equals(new Vector(700/2,700/2)))
 	 * @pre |position!=null
 	 * @pre |velocity!=null
-	 * @pre|(position.getX()<50000 && position.getX()>0)&& position.getY()<30000 && position.getY()>0 || position.equals(new Point(-250,-250))
+	 * @pre|(position.getX()<50000 && position.getX()>0)&& position.getY()<30000 && position.getY()>0 
 	 * @creates |result
 	 * @post |result!=null
 	 * @post |result.getCenter().equals(position)
@@ -108,18 +108,10 @@ public class BallState {
 
 	/**
 	 * @pre |position!=null
-	 * @pre |(position.getX()<50000 && position.getX()>0)&& position.getY()<30000 && position.getY()>0  || position.equals(new Point(-250,-250))
+	 * @pre |(position.getX()<50000 && position.getX()>0)&& position.getY()<30000 && position.getY()>0  
 	 * @post |result.getCenter().equals(position)
 	 */
 	public BallState getNewPosition(Point position) {
 		return BallState.valueOfB(position,getSize(),getVelocity());
-	}
-	/**
-	 * @pre |size!=null
-	 * @pre |(size.equals(new Vector(700/2,700/2)))||(size.equals(new Vector(0,0))) 
-	 * @post |result.getSize().equals(size)
-	 */
-	public BallState getNewSize(Vector size) {
-		return BallState.valueOfB(getCenter(),size,getVelocity());
 	}
 }

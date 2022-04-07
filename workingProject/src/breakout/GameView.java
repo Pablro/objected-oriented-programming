@@ -1,4 +1,4 @@
-package breakout.gui;
+package breakout;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -9,13 +9,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-
-import breakout.BallState;
-import breakout.BlockState;
-import breakout.BreakoutState;
-import breakout.Point;
-import breakout.PaddleState;
-import breakout.Vector;
 
 @SuppressWarnings("serial")
 public class GameView extends JPanel {

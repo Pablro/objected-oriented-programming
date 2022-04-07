@@ -30,7 +30,7 @@ class BlockStateTest {
 		}
 	@Test
 	void testUpdatingValues() {
-
+		/*
 		int HEIGHT = 30000;
 		int WIDTH = 50000;
 		int BLOCK_LINES = 9;
@@ -52,6 +52,8 @@ class BlockStateTest {
 		//myBlock10=myBlock10.setBlockTLBR(new Point(100000,200), new Point(300,400));
 		//myBlock10=myBlock10.setBlockTLBR(new Point(300,400), new Point(-5,400));
 		//myBlock10=myBlock10.setBlockTLBR(null, null);
+		 * */
+		 
 	}
 
 }
